@@ -1,5 +1,7 @@
 package org.dnacorp.xencyclopedia.extractor;
 
+import org.dnacorp.xencyclopedia.extractor.exception.X2FileDriverError;
+
 /**
  * Created by Claudio "Dna" Bonesana
  * Date: 16.08.2014 17:28
@@ -40,7 +42,7 @@ public class DataExtractorApplication {
     private void pckRead(String pck) {
         try {
             myRead(pck);
-        } catch (X2FileDriverException e) {
+        } catch (X2FileDriverError e) {
             e.printStackTrace();
         }
     }
@@ -48,7 +50,7 @@ public class DataExtractorApplication {
     private void pckWrite(String pck) {
         try {
             myWrite(pck, true);
-        } catch (X2FileDriverException e) {
+        } catch (X2FileDriverError e) {
             e.printStackTrace();
         }
     }
@@ -56,7 +58,7 @@ public class DataExtractorApplication {
     private void txtRead(String txt) {
         try {
             myRead(txt);
-        } catch (X2FileDriverException e) {
+        } catch (X2FileDriverError e) {
             e.printStackTrace();
         }
     }
@@ -64,7 +66,7 @@ public class DataExtractorApplication {
     private void txtWrite(String txt) {
         try {
             myWrite(txt, false);
-        } catch (X2FileDriverException e) {
+        } catch (X2FileDriverError e) {
             e.printStackTrace();
         }
     }
@@ -82,7 +84,7 @@ public class DataExtractorApplication {
     private void catPckRead(String pck) {
         try {
             myRead(pck);
-        } catch (X2FileDriverException e) {
+        } catch (X2FileDriverError e) {
             e.printStackTrace();
         }
     }
@@ -90,7 +92,7 @@ public class DataExtractorApplication {
     private void catPckWrite(String pck) {
         try {
             myWrite(pck, true);
-        } catch (X2FileDriverException e) {
+        } catch (X2FileDriverError e) {
             e.printStackTrace();
         }
     }
@@ -98,7 +100,7 @@ public class DataExtractorApplication {
     private void catTxtRead(String txt) {
         try {
             myRead(txt);
-        } catch (X2FileDriverException e) {
+        } catch (X2FileDriverError e) {
             e.printStackTrace();
         }
     }
@@ -106,7 +108,7 @@ public class DataExtractorApplication {
     private void catTxtWrite(String txt) {
         try {
             myWrite(txt, false);
-        } catch (X2FileDriverException e) {
+        } catch (X2FileDriverError e) {
             e.printStackTrace();
         }
     }
@@ -134,7 +136,7 @@ public class DataExtractorApplication {
         System.out.println("End of list.\n");
     }
 
-    private void myRead(String filename) throws X2FileDriverException {
+    private void myRead(String filename) throws X2FileDriverError {
         X2FileDriver X2FD = new X2FileDriver();
         // open the file
         System.out.println();
@@ -187,7 +189,7 @@ public class DataExtractorApplication {
         System.out.println("Close file returned: " + ret);
     }
 
-    private void myWrite(String filename, boolean bPCK) throws X2FileDriverException {
+    private void myWrite(String filename, boolean bPCK) throws X2FileDriverError {
         X2FileDriver X2FD = new X2FileDriver();
 
         System.out.println();
