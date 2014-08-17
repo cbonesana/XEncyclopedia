@@ -1,6 +1,7 @@
 package org.dnacorp.xencyclopedia.extractor.cat;
 
 import org.dnacorp.xencyclopedia.extractor.FileBuffer;
+import org.dnacorp.xencyclopedia.extractor.X2FDFlag;
 import org.dnacorp.xencyclopedia.extractor.exception.X2FileDriverError;
 import org.dnacorp.xencyclopedia.extractor.exception.X2FileDriverException;
 
@@ -142,20 +143,35 @@ public class X2CATBuffer extends ArrayList<X2CATEntry> {
     public FileBuffer loadFile(X2CATEntry entry, int fileType) {
         return null;
     }
-//    public filebuffer * createFile(const char *pszFile, int fileType);
-//    public bool deleteFile(const char *pszFile);
+//    public filebuffer * createFile(String pszFile, int fileType);
+//    public bool deleteFile(String pszFile);
 //    public bool saveFile(filebuffer *buff);
 //    public void closeFile(filebuffer *buff);
 //
-//    public bool create(const char *pszName);
+//    public bool create(String pszName);
 //
-//    public bool renameFile(const char *pszFileName, const char *pszNewName);
+//    public bool renameFile(String pszFileName, String pszNewName);
 //
-//    public int getFileCompressionType(const char *pszFileName);
-//    public bool fileStat(const char *pszFileName, X2FILEINFO *info);
+    public int getFileCompressionType(String pszFileName) throws X2FileDriverException {
+        int nRes;
+        char[] data = new char[3];
+        int i = find(pszFileName);
+
+        if(i == -1) {
+            throw new X2FileDriverException("Entry " + pszFileName + " not found.", X2FileDriverError.X2FD_E_CAT_NOENTRY);
+        } else {
+            if(it->size >= 3){
+                m_hDATFile.seek((io64::file::offset)it->offset, SEEK_SET);
+                m_hDATFile.read(data, 3);
+                nRes = GetBufferCompressionType(data, 3) == X2FD_FILETYPE_PCK;
+            }
+        }
+        return nRes;
+    }
+//    public bool fileStat(String pszFileName, X2FILEINFO *info);
 //
-//    public iterator findFirstFile(const char *pattern);
-//    public iterator findNextFile(iterator it, const char *pattern);
+//    public iterator findFirstFile(String pattern);
+//    public iterator findNextFile(iterator it, String pattern);
 
     private int find(String pszFileName){
         for (int i = 0; i < this.size(); i++) {

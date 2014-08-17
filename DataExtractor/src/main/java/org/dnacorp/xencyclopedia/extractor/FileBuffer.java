@@ -122,7 +122,6 @@ public class FileBuffer {
     public void cleanUp() {
         if(m_cat != null)
             m_cat.release();
-//        file.close();
     }
 
     public long allocated() {
@@ -156,7 +155,7 @@ public class FileBuffer {
                 throw new IOException("Expected " + size + "byte, found " + readed + ".");
         } else {
             if (offset > this->allocated())         // offset is beyond eof (and if allocated()==0)
-                return 0;
+            return 0;
 
             readed=size;
             if(size > (this->allocated() - offset)) // shring the size so we won't read past eof
@@ -198,14 +197,12 @@ public class FileBuffer {
 
     public int refcount() { return m_nRefCount; }
     public int addref() { return ++m_nRefCount; }
-    public int release()
-    {
+    public int release() {
         if(--m_nRefCount==0) {
-//            delete this;
+            cleanUp();
             return 0;
         }
-        else
-            return m_nRefCount;
+        return m_nRefCount;
     }
 
     public boolean dirty() { return m_bDirty; }
@@ -224,19 +221,13 @@ public class FileBuffer {
         m_cat=buff;
     }
 
-    public long write(byte[] pData, long size, long offset) throws IOException {
-        long count;
-
-        if (this.isFile() && this.isPlain()){
-            FileWriter fw = new FileWriter(file);
-            fw.write(pData);
-            count=file.write(pData, size);
-        } else {
-            count = writeBuffer(pData, size, offset);
-        }
-        if(count >= 0) mtime(time(0));	// update mtime
-        dirty(dirty() || count > 0);
-        return count;
+    public void write(byte[] pData, long size, long offset) throws IOException {
+        FileOutputStream fos = new FileOutputStream(file);
+        fos.write(pData);
+        fos.flush();
+        fos.close();
+        mtime(System.currentTimeMillis());	// update mtime
+        dirty(true);
     }
 
     public boolean allocate(long newsize) {
@@ -251,7 +242,7 @@ public class FileBuffer {
         if(nFileType == X2FDFlag.FILETYPE_AUTO)
             nFileType = GetFileCompressionType(pszName);
 
-        int bRes = -1;
+        int bRes;
 
         if(nFileType != X2FDFlag.FILETYPE_PLAIN)
             bRes = openFileCompressed(pszName, nAccess, nCreateDisposition, nFileType);
@@ -261,8 +252,7 @@ public class FileBuffer {
         return bRes;
     }
 
-    public static int fileTypeToBufferType(X2FDFlag fileType)
-    {
+    public static int fileTypeToBufferType(X2FDFlag fileType) {
         int res;
         if(fileType == X2FDFlag.FILETYPE_PCK)
             res = IS_PCK;
@@ -273,8 +263,7 @@ public class FileBuffer {
         return res;
     }
 
-    public static X2FDFlag bufferTypeToFileType(int bufferType)
-    {
+    public static X2FDFlag bufferTypeToFileType(int bufferType) {
         X2FDFlag res;
         if((bufferType & IS_PCK) > 0)
             res = X2FDFlag.FILETYPE_PCK;
