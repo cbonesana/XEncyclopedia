@@ -1,6 +1,6 @@
 package org.dnacorp.xencyclopedia.extractor;
 
-import org.dnacorp.xencyclopedia.extractor.exception.X2FileDriverError;
+import org.dnacorp.xencyclopedia.extractor.exception.X2FileDriverException;
 
 /**
  * Created by Claudio "Dna" Bonesana
@@ -42,7 +42,7 @@ public class DataExtractorApplication {
     private void pckRead(String pck) {
         try {
             myRead(pck);
-        } catch (X2FileDriverError e) {
+        } catch (X2FileDriverException e) {
             e.printStackTrace();
         }
     }
@@ -50,7 +50,7 @@ public class DataExtractorApplication {
     private void pckWrite(String pck) {
         try {
             myWrite(pck, true);
-        } catch (X2FileDriverError e) {
+        } catch (X2FileDriverException e) {
             e.printStackTrace();
         }
     }
@@ -58,7 +58,7 @@ public class DataExtractorApplication {
     private void txtRead(String txt) {
         try {
             myRead(txt);
-        } catch (X2FileDriverError e) {
+        } catch (X2FileDriverException e) {
             e.printStackTrace();
         }
     }
@@ -66,7 +66,7 @@ public class DataExtractorApplication {
     private void txtWrite(String txt) {
         try {
             myWrite(txt, false);
-        } catch (X2FileDriverError e) {
+        } catch (X2FileDriverException e) {
             e.printStackTrace();
         }
     }
@@ -84,7 +84,7 @@ public class DataExtractorApplication {
     private void catPckRead(String pck) {
         try {
             myRead(pck);
-        } catch (X2FileDriverError e) {
+        } catch (X2FileDriverException e) {
             e.printStackTrace();
         }
     }
@@ -92,7 +92,7 @@ public class DataExtractorApplication {
     private void catPckWrite(String pck) {
         try {
             myWrite(pck, true);
-        } catch (X2FileDriverError e) {
+        } catch (X2FileDriverException e) {
             e.printStackTrace();
         }
     }
@@ -100,7 +100,7 @@ public class DataExtractorApplication {
     private void catTxtRead(String txt) {
         try {
             myRead(txt);
-        } catch (X2FileDriverError e) {
+        } catch (X2FileDriverException e) {
             e.printStackTrace();
         }
     }
@@ -108,7 +108,7 @@ public class DataExtractorApplication {
     private void catTxtWrite(String txt) {
         try {
             myWrite(txt, false);
-        } catch (X2FileDriverError e) {
+        } catch (X2FileDriverException e) {
             e.printStackTrace();
         }
     }
@@ -129,14 +129,14 @@ public class DataExtractorApplication {
             do{
                 System.out.println("\t" + info.szFileName);
             } // TODO: this is a .next()
-            while(X2FD.CatFindNextFile(hFind, info) != null);
+            while(X2FD.CatFindNextFile(hFind, info));
         }
         X2FD.CatFindClose(hFind);
         X2FD.CloseCatalog(cat);
         System.out.println("End of list.\n");
     }
 
-    private void myRead(String filename) throws X2FileDriverError {
+    private void myRead(String filename) throws X2FileDriverException {
         X2FileDriver X2FD = new X2FileDriver();
         // open the file
         System.out.println();
@@ -161,7 +161,7 @@ public class DataExtractorApplication {
         int size=X2FD.FileSize(file);
         System.out.println("File size is " + size + " bytes");
         // read the data
-        String data = X2FD.ReadFile(file);
+        long data = X2FD.ReadFile(file,null);
         System.out.println("File data:\n" + data);
 
         // eof should be TRUE now
@@ -177,19 +177,19 @@ public class DataExtractorApplication {
         System.out.println("EOF = " + eof);
 
         // read the first 10 bytes
-        String buff;
-        buff = X2FD.ReadFile(file, 10);
+        long buff;
+        buff = X2FD.ReadFile(file, null);
         System.out.println("First 10 bytes:\n" + buff);
         // read the second 10 bytes
-        buff = X2FD.ReadFile(file, 10);
+        buff = X2FD.ReadFile(file, null);
         System.out.println("Second 10 bytes:\n" + buff);
 
-        // close the file
+        // cleanUp the file
         boolean ret=X2FD.CloseFile(file);
         System.out.println("Close file returned: " + ret);
     }
 
-    private void myWrite(String filename, boolean bPCK) throws X2FileDriverError {
+    private void myWrite(String filename, boolean bPCK) throws X2FileDriverException {
         X2FileDriver X2FD = new X2FileDriver();
 
         System.out.println();
@@ -210,7 +210,7 @@ public class DataExtractorApplication {
         // if size is  > 0 then the file already exists and contains something
         // we will display it
         if(size > 0){
-            String buff = X2FD.ReadFile(file, size);
+            long buff = X2FD.ReadFile(file, null);
             System.out.println("Old data:\n" + buff);
         }
 
@@ -224,17 +224,17 @@ public class DataExtractorApplication {
 
         System.out.println("Writing data");
         // write the text
-        X2FD.WriteFile(file, text);
+        X2FD.WriteFile(file, null);
         // write the second line
-        X2FD.WriteFile(file, text2);
+        X2FD.WriteFile(file, null);
 
-        // Always call this prior to close if writing to file
+        // Always call this prior to cleanUp if writing to file
         // This is to ensure that there will be no garbage beyond your data (as the file
         // can be actually bigger than the data you are writing now). Of course if you are using
         // random access writing you must first seek to the correct end offset.
         X2FD.SetEndOfFile(file);
 
-        // close the file
+        // cleanUp the file
         System.out.println("Closing file\n");
         X2FD.CloseFile(file);
 

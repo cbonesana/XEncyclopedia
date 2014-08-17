@@ -1,6 +1,6 @@
 package org.dnacorp.xencyclopedia.extractor;
 
-import org.dnacorp.xencyclopedia.extractor.cat.CATBuffer;
+import org.dnacorp.xencyclopedia.extractor.cat.X2CATBuffer;
 import org.dnacorp.xencyclopedia.extractor.exception.X2FileDriverException;
 
 import java.io.File;
@@ -85,13 +85,13 @@ public class X2FileDriver {
     }
 
     /**
-     * Close handle from previous call to X2FD_OpenFile. Does not necessarily close
+     * Close handle from previous call to X2FD_OpenFile. Does not necessarily cleanUp
      * the physical file itself if it has been opened more than once.
      * If the file is opened for writing and it is PCK or it is opened from CAT,
      * then the data will be saved to the file while the last reference to such file
      * is freed.
      *
-     * in: hFile - handle to close
+     * in: hFile - handle to cleanUp
      * ret: non zero if file has been really closed and was saved ok, if the file
      *      was not closed or there was an error while saving, zero is returned
      */
@@ -233,24 +233,24 @@ public class X2FileDriver {
         String pszFile;
         X2FDFlag nRes = X2FDFlag.FILETYPE_PLAIN;
 
-        CATPath catPath = ParseCATPath(pszFileName);
-
-        if (pszCat == null) {
-            nRes = GetFileCompressionType(pszFileName);
-        } else {
-
-            CATBuffer cat = _OpenCatalog();
-
-        }
+//        CATPath catPath = ParseCATPath(pszFileName);
+//
+//        if (pszCat == null) {
+//            nRes = GetFileCompressionType(pszFileName);
+//        } else {
+//
+//            X2CATBuffer cat = _OpenCatalog();
+//
+//        }
 
 
         return nRes;
     }
 
-    private X2CATBuffer _OpenCatalog(String pszName, nCreateDisposition) {
+    private X2CATBuffer _OpenCatalog(String pszName, String nCreateDisposition) {
         X2CATBuffer catBuffer;
 
-
+        return null;
     }
 
     /**
@@ -301,7 +301,7 @@ public class X2FileDriver {
         return null;
     }
 
-    /**Will close handle associated with catalog, but not neccessarily the catalog
+    /**Will cleanUp handle associated with catalog, but not neccessarily the catalog
      * itself if it's opened by another call to X2FD_OpenCatalog or X2FD_OpenFile
      *
      * If some file was modified inside the catalog, the CAT file (the index file
@@ -310,7 +310,7 @@ public class X2FileDriver {
      *
      * There is no way to verify that it was sucessfull.
      *
-     * in: catalog to close
+     * in: catalog to cleanUp
      * ret: 0 if handle is 0 - otherwise non zero
      */
     public boolean CloseCatalog(X2Catalog hCat) {

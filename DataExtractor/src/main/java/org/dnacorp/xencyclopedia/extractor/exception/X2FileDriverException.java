@@ -6,6 +6,7 @@ package org.dnacorp.xencyclopedia.extractor.exception;
  */
 public class X2FileDriverException extends Exception implements X2FileDriverError {
 
-
-
+    public X2FileDriverException(String message, int error) {
+        super(message + " (" + error + ")");
+    }
 }
