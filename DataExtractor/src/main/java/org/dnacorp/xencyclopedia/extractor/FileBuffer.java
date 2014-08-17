@@ -2,7 +2,8 @@ package org.dnacorp.xencyclopedia.extractor;
 
 import org.dnacorp.xencyclopedia.extractor.cat.X2CATBuffer;
 
-import java.io.File;
+import java.io.*;
+import java.util.zip.GZIPInputStream;
 
 /**
  * Created by Claudio "Dna" Bonesana
@@ -27,22 +28,77 @@ public class FileBuffer {
         m_allocated=newsize;
     }
 
-    private long writeBuffer(byte[] data, long size, long offset) {
-        return 0;
+    private void writeBuffer(byte[] data) throws IOException {
+        FileOutputStream fos = new FileOutputStream(file);
+        fos.write(data);
+        fos.flush();
+        fos.close();
     }
 
-    private boolean openFilePlain(String pszName, int nAccess, int nCreateDisposition) {
-        return false;
+    private int openFilePlain(String pszName, X2FDFlag nAccess, X2FDFlag nCreateDisposition) throws IOException {
+        file = new File(pszName);
+
+        if(nCreateDisposition == X2FDFlag.CREATE_NEW)
+            if (!file.createNewFile())
+                throw new IOException("Can't create new file " + pszName + ".");
+        if(nAccess == X2FDFlag.READ){
+            if(!file.setReadOnly())
+                throw new IOException("Can't set file " + pszName + " to read only.");
+        } else if(nAccess == X2FDFlag.WRITE){
+            if (!file.setWritable(true))
+                throw new IOException("Can't set file " + pszName + " writable.");
+        }
+
+        this.pszName = pszName;
+        type |= IS_FILE;
+        type |= IS_PLAIN;
+        mtime(file.lastModified());
+        binarysize(file.length());
+
+        FileInputStream fis = new FileInputStream(file);
+        m_data = new byte[(int)m_binarysize];
+        int readed = fis.read(m_data);
+        fis.close();
+        return readed;
     }
 
-    private boolean openFileCompressed(String pszName, int nAccess, int nCreateDisposition, int compressionType) {
-        return false;
+    private int openFileCompressed(String pszName, X2FDFlag nAccess, X2FDFlag nCreateDisposition, X2FDFlag compressionType) throws IOException {
+        openFilePlain(pszName, nAccess, nCreateDisposition);
+        int readed = -1;
+        // unpack file only if it's not empty
+        if (m_size != 0) {
+            byte[] buffer = new byte[(int)m_size];
+            GZIPInputStream gzis;
+
+            if(compressionType == X2FDFlag.FILETYPE_PCK){
+                gzis = new GZIPInputStream(new PCKFileInputStream(file));
+            } else {
+                gzis = new GZIPInputStream(new FileInputStream(file));
+            }
+
+            readed = gzis.read(buffer, 0, (int)m_size);
+            gzis.close();
+            m_data = buffer;
+
+        } else{
+            mtime(file.lastModified());
+            dirty(true);
+        }
+
+        if(compressionType == X2FDFlag.FILETYPE_PCK)
+            type |= IS_PCK;
+        else if(compressionType == X2FDFlag.FILETYPE_DEFLATE)
+            type |= IS_DEFLATE;
+        type |= IS_FILE;
+        binarysize(file.length());
+
+        return readed;
     }
 
-    public static final int ISFILE = 1;
-    public static final int ISPLAIN = 2;
-    public static final int ISPCK = 4;
-    public static final int ISDEFLATE = 8;
+    public static final int IS_FILE    = 1;
+    public static final int IS_PLAIN   = 2;
+    public static final int IS_PCK     = 4;
+    public static final int IS_DEFLATE = 8;
 
     public File file;
     public String pszName;
@@ -81,16 +137,33 @@ public class FileBuffer {
         return m_binarysize;
     }
 
-    public void binarysize(long newsize) {
-        m_binarysize=newsize;
+    public void binarysize(long newSize) {
+        m_binarysize = newSize;
     }
 
     public long filesize() {
-        return 0;
+        if(this.isFile() && this.isPlain())
+            return file.length();
+        return size();
     }
 
-    public long read(byte[] buffer, long size, long offset) {
-        return 0;
+    public long read(byte[] buffer, long size, long offset) throws IOException {
+        long readed;
+        if (this.isFile() && this.isPlain()){
+            FileInputStream fis = new FileInputStream(file);
+            readed = fis.read(buffer);
+            if (readed != size)
+                throw new IOException("Expected " + size + "byte, found " + readed + ".");
+        } else {
+            if (offset > this->allocated())         // offset is beyond eof (and if allocated()==0)
+                return 0;
+
+            readed=size;
+            if(size > (this->allocated() - offset)) // shring the size so we won't read past eof
+            readed=this->allocated() - offset;
+            memcpy(buffer, data() + offset, (size_t)readed);
+        }
+        return readed;
     }
 
     public boolean save() {
@@ -136,12 +209,12 @@ public class FileBuffer {
     }
 
     public boolean dirty() { return m_bDirty; }
-    public void dirty(boolean val) { 
-        m_bDirty=val; 
+    public void dirty(boolean val) {
+        m_bDirty=val;
     }
 
     public X2CATBuffer cat() {
-        return m_cat; 
+        return m_cat;
     }
 
     public void cat(X2CATBuffer buff) {
@@ -151,8 +224,19 @@ public class FileBuffer {
         m_cat=buff;
     }
 
-    public long write(byte[] pData, long size, long offset) {
-        return 0;
+    public long write(byte[] pData, long size, long offset) throws IOException {
+        long count;
+
+        if (this.isFile() && this.isPlain()){
+            FileWriter fw = new FileWriter(file);
+            fw.write(pData);
+            count=file.write(pData, size);
+        } else {
+            count = writeBuffer(pData, size, offset);
+        }
+        if(count >= 0) mtime(time(0));	// update mtime
+        dirty(dirty() || count > 0);
+        return count;
     }
 
     public boolean allocate(long newsize) {
@@ -163,31 +247,51 @@ public class FileBuffer {
         return false;
     }
 
-    public boolean openFile(String pszName, int nAccess, int nCreateDisposition, int nFileType) {
-        return false;
+    public int openFile(String pszName, X2FDFlag nAccess, X2FDFlag nCreateDisposition, X2FDFlag nFileType) throws IOException {
+        if(nFileType == X2FDFlag.FILETYPE_AUTO)
+            nFileType = GetFileCompressionType(pszName);
+
+        int bRes = -1;
+
+        if(nFileType != X2FDFlag.FILETYPE_PLAIN)
+            bRes = openFileCompressed(pszName, nAccess, nCreateDisposition, nFileType);
+        else
+            bRes = openFilePlain(pszName, nAccess, nCreateDisposition);
+
+        return bRes;
     }
 
     public static int fileTypeToBufferType(X2FDFlag fileType)
     {
         int res;
         if(fileType == X2FDFlag.FILETYPE_PCK)
-            res = ISPCK;
+            res = IS_PCK;
         else if(fileType == X2FDFlag.FILETYPE_DEFLATE)
-            res = ISDEFLATE;
+            res = IS_DEFLATE;
         else
-            res = ISPLAIN;
+            res = IS_PLAIN;
         return res;
     }
 
     public static X2FDFlag bufferTypeToFileType(int bufferType)
     {
         X2FDFlag res;
-        if((bufferType & ISPCK) > 0)
+        if((bufferType & IS_PCK) > 0)
             res = X2FDFlag.FILETYPE_PCK;
-        else if((bufferType & ISDEFLATE) > 0)
+        else if((bufferType & IS_DEFLATE) > 0)
             res = X2FDFlag.FILETYPE_DEFLATE;
         else
             res = X2FDFlag.FILETYPE_PLAIN;
         return res;
     }
+
+    public boolean isFile() {
+        return type % IS_FILE == 0;
+    }
+
+    public boolean isPlain() {
+        return type % IS_PLAIN == 0;
+    }
+
+
 }
