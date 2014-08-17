@@ -1,5 +1,6 @@
 package org.dnacorp.xencyclopedia.extractor.cat;
 
+import org.dnacorp.xencyclopedia.extractor.FileBuffer;
 import org.dnacorp.xencyclopedia.extractor.exception.X2FileDriverError;
 import org.dnacorp.xencyclopedia.extractor.exception.X2FileDriverException;
 
@@ -131,18 +132,16 @@ public class X2CATBuffer extends ArrayList<X2CATEntry> {
         return true;
     }
 
-//    public filebuffer * loadFile(String pszFile, int fileType) throws X2FileDriverException {
-//        X2CATEntry entry = findFile(pszFile);
-//        if (entry == null)
-//            throw new X2FileDriverException("No entry: " + pszFile + ".", +X2FileDriverError.X2FD_E_CAT_NOENTRY);
-//        return loadFile(entry, fileType);
-//    }
-//
-//    public filebuffer * loadFile(X2CATEntry entry, int fileType) {
-//
-//
-//
-//    }
+    public FileBuffer loadFile(String pszFile, int fileType) throws X2FileDriverException {
+        X2CATEntry entry = findFile(pszFile);
+        if (entry == null)
+            throw new X2FileDriverException("No entry: " + pszFile + ".", +X2FileDriverError.X2FD_E_CAT_NOENTRY);
+        return loadFile(entry, fileType);
+    }
+
+    public FileBuffer loadFile(X2CATEntry entry, int fileType) {
+        return null;
+    }
 //    public filebuffer * createFile(const char *pszFile, int fileType);
 //    public bool deleteFile(const char *pszFile);
 //    public bool saveFile(filebuffer *buff);
