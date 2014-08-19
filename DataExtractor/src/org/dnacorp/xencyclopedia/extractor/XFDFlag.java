@@ -5,7 +5,7 @@ package org.dnacorp.xencyclopedia.extractor;
  * Created by Claudio "Dna" Bonesana
  * Date: 16.08.2014 17:28
  */
-public enum X2FDFlag {
+public enum XFDFlag {
 
     // open mode
     READ(0),
@@ -29,11 +29,11 @@ public enum X2FDFlag {
 
     private int value;
 
-    private X2FDFlag(int value) {
+    private XFDFlag(int value) {
         this.value = value;
     }
 
-    public int and(X2FDFlag flag) {
+    public int and(XFDFlag flag) {
         return this.value & flag.value;
     }
 

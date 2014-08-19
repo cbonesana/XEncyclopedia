@@ -1,19 +1,21 @@
 package org.dnacorp.xencyclopedia.extractor.cat;
 
 import org.dnacorp.xencyclopedia.extractor.FileBuffer;
-import org.dnacorp.xencyclopedia.extractor.X2FDFlag;
+import org.dnacorp.xencyclopedia.extractor.XFDFlag;
 import org.dnacorp.xencyclopedia.extractor.crypt.Crypt;
-import org.dnacorp.xencyclopedia.extractor.exception.X2FileDriverError;
-import org.dnacorp.xencyclopedia.extractor.exception.X2FileDriverException;
+import org.dnacorp.xencyclopedia.extractor.exception.XFileDriverError;
+import org.dnacorp.xencyclopedia.extractor.exception.XFileDriverException;
 
 import java.io.*;
 import java.util.ArrayList;
+
+import static org.dnacorp.xencyclopedia.extractor.XFDFlag.*;
 
 /**
  * Created by Claudio "Dna" Bonesana
  * Date: 16.08.2014 22:42.
  */
-public class X2CATBuffer extends ArrayList<X2CATEntry> {
+public class XCATBuffer extends ArrayList<XCATEntry> {
 
     private String m_pszCATName;
     private String m_pszDATName;
@@ -24,7 +26,7 @@ public class X2CATBuffer extends ArrayList<X2CATEntry> {
     private int m_nRefCount;
     private boolean m_bDirty;
 
-    public X2CATBuffer (){
+    public XCATBuffer(){
         m_nRefCount = 1;
         m_pszCATName = null;
         m_pszDATName = null;
@@ -72,10 +74,10 @@ public class X2CATBuffer extends ArrayList<X2CATEntry> {
         }
     }
 
-    public X2CATEntry findFile(String pszName){
-        for (X2CATEntry x2CATEntry : this)
-            if (x2CATEntry.pszFileName.equals(pszName))
-                return x2CATEntry;
+    public XCATEntry findFile(String pszName){
+        for (XCATEntry XCATEntry : this)
+            if (XCATEntry.pszFileName.equals(pszName))
+                return XCATEntry;
         return null;
     }
 
@@ -84,8 +86,8 @@ public class X2CATBuffer extends ArrayList<X2CATEntry> {
         m_hCATFile   = new File(pszName);
 
         // we must open the corresponding DAT file as well
-        // do not use stored dat name because it is always 01.dat even for 02.cat and 03.cat
-        m_pszDATName = pszName.replace(".cat", ".dat");
+        // do not use stored dat name because it is always 01.dat even for 02.getCat and 03.getCat
+        m_pszDATName = pszName.replace(".getCat", ".dat");
         m_hDATFile   = new File(m_pszDATName);
 
         if (!m_hCATFile.exists())
@@ -117,7 +119,7 @@ public class X2CATBuffer extends ArrayList<X2CATEntry> {
                 int last = line.lastIndexOf(" ");
                 if (last == -1)
                     throw new IOException("CAT file " + pszName + " contains invalid lines.");
-                X2CATEntry info = new X2CATEntry();     // create a new X2CATEntry
+                XCATEntry info = new XCATEntry();     // create a new X2CATEntry
                 info.pszFileName = line.substring(0,last);
                 info.offset = offset;
                 info.size   = Long.parseLong(line.substring(last+1));
@@ -134,14 +136,14 @@ public class X2CATBuffer extends ArrayList<X2CATEntry> {
         return true;
     }
 
-    public FileBuffer loadFile(String pszFile, X2FDFlag fileType) throws X2FileDriverException, IOException {
-        X2CATEntry entry = findFile(pszFile);
+    public FileBuffer loadFile(String pszFile, XFDFlag fileType) throws XFileDriverException, IOException {
+        XCATEntry entry = findFile(pszFile);
         if (entry == null)
-            throw new X2FileDriverException("No entry: " + pszFile + ".", +X2FileDriverError.X2FD_E_CAT_NOENTRY);
+            throw new XFileDriverException("No entry: " + pszFile + ".", +XFileDriverError.X2FD_E_CAT_NOENTRY);
         return loadFile(entry, fileType);
     }
 
-    public FileBuffer loadFile(X2CATEntry entry, X2FDFlag fileType) throws X2FileDriverException, FileNotFoundException, IOException {
+    public FileBuffer loadFile(XCATEntry entry, XFDFlag fileType) throws XFileDriverException, FileNotFoundException, IOException {
         byte[] outdata;
         long outsize;
         long mtime=-1; // -1 mean "not set"
@@ -150,8 +152,8 @@ public class X2CATBuffer extends ArrayList<X2CATEntry> {
         if(entry.size == 0){
             outdata = null;
             outsize = 0;
-            if(fileType == X2FDFlag.FILETYPE_AUTO)
-                fileType=X2FDFlag.FILETYPE_PCK;
+            if(fileType == FILETYPE_AUTO)
+                fileType= FILETYPE_PCK;
             buff.type |= fileType.value();
         } else{
             byte[] data = new byte[entry.getSize()];
@@ -162,10 +164,10 @@ public class X2CATBuffer extends ArrayList<X2CATEntry> {
 
             Crypt.DecryptCAT(data, entry.getSize());
 
-            if(fileType == X2FDFlag.FILETYPE_AUTO)
+            if(fileType == FILETYPE_AUTO)
                 fileType = GetBufferCompressionType(data, entry.getSize());
 
-            if(fileType == X2FDFlag.FILETYPE_PLAIN) {       // plain file
+            if(fileType == FILETYPE_PLAIN) {       // plain file
                 outdata = data;
                 outsize = entry.getSize();
                 buff.type |= FileBuffer.IS_PLAIN;
@@ -176,10 +178,10 @@ public class X2CATBuffer extends ArrayList<X2CATEntry> {
         }
 
         entry.buffer = buff;
-        buff.cat(this);
-        buff.data(outdata, entry.getSize());
-        buff.mtime(mtime);
-        buff.binarysize(entry.getSize());
+        buff.setCat(this);
+        buff.setData(outdata, entry.getSize());
+        buff.setTime(mtime);
+        buff.setBinarySize(entry.getSize());
         buff.pszName = m_pszDATName + "::" + entry.pszFileName;
 
         return buff;
@@ -194,21 +196,21 @@ public class X2CATBuffer extends ArrayList<X2CATEntry> {
 //
 //    public bool renameFile(String pszFileName, String pszNewName);
 //
-    public int getFileCompressionType(String pszFileName) throws X2FileDriverException, IOException {
+    public static XFDFlag getFileCompressionType(String pszFileName) throws XFileDriverException, IOException {
         int nRes;
         int i = find(pszFileName);
 
         if(i == -1)
-            throw new X2FileDriverException("Entry " + pszFileName + " not found.", X2FileDriverError.X2FD_E_CAT_NOENTRY);
+            throw new XFileDriverException("Entry " + pszFileName + " not found.", XFileDriverError.X2FD_E_CAT_NOENTRY);
 
-        X2CATEntry it = this.get(i);
-        if(it.size >= 3){
+        XCATEntry entry = this.get(i);
+        if(entry.size >= 3){
             byte[] data = new byte[3];
             RandomAccessFile raf = new RandomAccessFile(m_hDATFile, "r");
-            raf.seek(it.offset);
+            raf.seek(entry.offset);
             raf.read(data,0,3);
             raf.close();
-            nRes = GetBufferCompressionType(data, 3) == X2FDFlag.FILETYPE_PCK;
+            nRes = GetBufferCompressionType(data, 3) == FILETYPE_PCK;
         }
 
         return nRes;
@@ -220,8 +222,8 @@ public class X2CATBuffer extends ArrayList<X2CATEntry> {
 
     private int find(String pszFileName){
         for (int i = 0; i < this.size(); i++) {
-            X2CATEntry x2CATEntry = this.get(i);
-            if (x2CATEntry.pszFileName.equals(pszFileName))
+            XCATEntry XCATEntry = this.get(i);
+            if (XCATEntry.pszFileName.equals(pszFileName))
                 return i;
         }
         return -1;
@@ -229,8 +231,8 @@ public class X2CATBuffer extends ArrayList<X2CATEntry> {
 
     private long dataSize() {
         long size = 0;
-        for (X2CATEntry x2CATEntry : this)
-            size += x2CATEntry.size;
+        for (XCATEntry XCATEntry : this)
+            size += XCATEntry.size;
         return size;
     }
 

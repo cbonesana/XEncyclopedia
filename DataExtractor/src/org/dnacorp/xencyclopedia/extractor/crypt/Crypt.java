@@ -6,7 +6,7 @@ package org.dnacorp.xencyclopedia.extractor.crypt;
  */
 public class Crypt {
 
-    /* size must be multiple of 5! */
+    /* getSize must be multiple of 5! */
     public static void DecryptCAT(byte[] buffer, int size){
         int[] magic = {0xDB, 0xDC, 0xDD, 0xDE, 0xDF};
 
@@ -20,7 +20,7 @@ public class Crypt {
 
     /**
      * although you can skip this function and will still be able to
-     * unpack PCKs from DATs, you will fail to load nonpacked data
+     * unpack PCKs from DATs, you will fail to load nonpacked getData
      * don't ask me why...
      */
     public static void DecryptDAT(byte[] buffer, int size) {

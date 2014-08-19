@@ -1,14 +1,14 @@
 package org.dnacorp.xencyclopedia.extractor.cat;
 
 import org.dnacorp.xencyclopedia.extractor.FileBuffer;
-import org.dnacorp.xencyclopedia.extractor.exception.X2FileDriverError;
-import org.dnacorp.xencyclopedia.extractor.exception.X2FileDriverException;
+import org.dnacorp.xencyclopedia.extractor.exception.XFileDriverError;
+import org.dnacorp.xencyclopedia.extractor.exception.XFileDriverException;
 
 /**
  * Created by Claudio "Dna" Bonesana
  * Date: 16.08.2014 22:42.
  */
-public class X2CATEntry {
+public class XCATEntry {
 
     protected String pszFileName;
     protected long offset;
@@ -16,14 +16,14 @@ public class X2CATEntry {
 
     protected FileBuffer buffer;
 
-    public X2CATEntry(){
+    public XCATEntry(){
         pszFileName = null;
         offset = 0;
         size = 0;
         buffer = null;
     }
 
-    public X2CATEntry(String pszFileName, long offset, long size) {
+    public XCATEntry(String pszFileName, long offset, long size) {
         this.pszFileName = pszFileName;
         this.offset = offset;
         this.size = size;
@@ -34,9 +34,9 @@ public class X2CATEntry {
         return "ENTRY: " + pszFileName + " " + size + " (" + offset + ")";
     }
 
-    public int getSize() throws X2FileDriverException {
+    public int getSize() throws XFileDriverException {
         if (size > Integer.MAX_VALUE)
-            throw new X2FileDriverException("Entry " + pszFileName + " is too big (" + size + "byte)", X2FileDriverError.X2FD_E_CAT_INVALIDSIZE);
+            throw new XFileDriverException("Entry " + pszFileName + " is too big (" + size + "byte)", XFileDriverError.X2FD_E_CAT_INVALIDSIZE);
         return (int)size;
     }
 }

@@ -1,17 +1,17 @@
 package org.dnacorp.xencyclopedia.extractor;
 
-import org.dnacorp.xencyclopedia.extractor.cat.X2CATBuffer;
-import org.dnacorp.xencyclopedia.extractor.exception.X2FileDriverException;
+import org.dnacorp.xencyclopedia.extractor.cat.XCATBuffer;
+import org.dnacorp.xencyclopedia.extractor.exception.XFileDriverException;
+import org.dnacorp.xencyclopedia.extractor.exception.XPathException;
+import org.dnacorp.xencyclopedia.extractor.utils.XPath;
 
-import java.io.File;
+import static org.dnacorp.xencyclopedia.extractor.XFDFlag.*;
 
 /**
  * Created by Claudio "Dna" Bonesana
  * Date: 16.08.2014 17:28
  */
-public class X2FileDriver {
-
-    /* files */
+public class XFileDriver {
 
     /**
      * Opens a file and return its handle. Works like WINAPI CreateFile function.
@@ -27,10 +27,10 @@ public class X2FileDriver {
      * It would be always created as PLAIN.
      *
      * PLAIN means that there is no translation and you can open even PCKs with it,
-     * but you will read and write the raw binary data.
+     * but you will read and write the raw binary getData.
      *
      * PCK means that the file is PCK. If file doesn't exist or it's 0 bytes long,
-     * it will be created and treated as PCK. If file exists and contains data, then
+     * it will be created and treated as PCK. If file exists and contains getData, then
      * it must really be a PCK file.
      *
      * This function can open physical files from OS filesystem, trasparently open
@@ -39,8 +39,8 @@ public class X2FileDriver {
      * To open file within a CAT archive use this syntax:
      * <CAT file name>::<file inside CAT>
      *
-     * Example: C:\\01.cat::types\\TShips.pck will open file "types\TShips.pck"
-     * from catalog "c:\01.cat".
+     * Example: C:\\01.getCat::types\\TShips.pck will open file "types\TShips.pck"
+     * from catalog "c:\01.getCat".
      *
      * File name is case insensitive.
      *
@@ -55,16 +55,51 @@ public class X2FileDriver {
      *                 X2FD_FILETYPE_PCK)
      * ret: handle of opened file or 0 on failure
      */
-    public X2File OpenFile(String pszName, X2FDFlag nAccess, X2FDFlag nCreateDisposition, X2FDFlag nFileType) throws X2FileDriverException {
+    public XFile OpenFile(String pszName, XFDFlag nAccess, XFDFlag nCreateDisposition, XFDFlag nFileType) throws XFileDriverException {
 
-        File buff;
+        FileBuffer buffer;
 
-        if (nFileType == X2FDFlag.FILETYPE_AUTO)
-            nFileType = X2FD_GetFileCompressionType(pszName);
+        if(nFileType == FILETYPE_AUTO)
+            nFileType = GetFileCompressionType(pszName);
 
+        buff = findBuffer(pszName);
+        if(buff){
+            // check the filemode
+            if(checkBuffMode(buff, nAccess)==false){
+                error(X2FD_E_FILE_BADMODE);
+                buff->release();
+                return null;
+            }
+        }
+        // plain files - we will always open new filebuffer
+        if(nFileType == FILETYPE_PLAIN){
+            if(buff) buff->release();
+            buff=NULL;
+        }
 
+        if(buff==NULL){
+            buff=new filebuffer();
+            bool bRes=buff->openFile(pszName, nAccess, nCreateDisposition, nFileType);
+            error(buff->error()); // always set the error
+            if(bRes==false){
+                buff->release();
+                buff=NULL;
+            }
+            else
+                g_bufflist.push_back(buff);
+        }
 
-        return null;
+        XFile f;
+        if(buff){
+            f=new xfile();
+            f->buffer(buff);
+            f->mode(nAccess);
+            buff->release();
+        }
+        else
+            f=NULL;
+
+        return (f==NULL ? NULL : (X2FILE) f);
     }
 
     /**
@@ -80,7 +115,7 @@ public class X2FileDriver {
      *                          X2FD_FILETYPE_PCK)
      * ret: handle of opened file or 0 on failure
      */
-    public X2File OpenFileConvert(String pszName, X2FDFlag nCreateDisposition, X2FDFlag nFileType, X2FDFlag nConvertToFileType) {
+    public XFile OpenFileConvert(String pszName, XFDFlag nCreateDisposition, XFDFlag nFileType, XFDFlag nConvertToFileType) {
         return null;
     }
 
@@ -88,26 +123,26 @@ public class X2FileDriver {
      * Close handle from previous call to X2FD_OpenFile. Does not necessarily cleanUp
      * the physical file itself if it has been opened more than once.
      * If the file is opened for writing and it is PCK or it is opened from CAT,
-     * then the data will be saved to the file while the last reference to such file
+     * then the getData will be saved to the file while the last reference to such file
      * is freed.
      *
      * in: hFile - handle to cleanUp
      * ret: non zero if file has been really closed and was saved ok, if the file
      *      was not closed or there was an error while saving, zero is returned
      */
-    public boolean CloseFile(X2File file) {
+    public boolean CloseFile(XFile file) {
         return false;
     }
 
     /**
-     * Return size of file's buffer. For files opened as PLAIN the returned size is
-     * same as physical file size. For PCK files, it's the size of data it PCK file
-     * not the physical size!
+     * Return getSize of file's buffer. For files opened as PLAIN the returned getSize is
+     * same as physical file getSize. For PCK files, it's the getSize of getData it PCK file
+     * not the physical getSize!
      *
      * in: handle of file
-     * ret: size of file or -1 on failure
+     * ret: getSize of file or -1 on failure
      */
-    public int FileSize(X2File hFile) {
+    public int FileSize(XFile hFile) {
         return 0;
     }
 
@@ -117,23 +152,23 @@ public class X2FileDriver {
      * in: handle of file
      * ret: non zero if EOF is true, 0 otherwise
      */
-    public boolean EOF(X2File file) {
+    public boolean EOF(XFile file) {
         return false;
     }
 
     /**
      * Works like C runtime function fread()
-     * It will read up to <size> bytes from specified file and write them to
+     * It will read up to <getSize> bytes from specified file and write them to
      * <buffer>.
-     * If file is opened as PCK then the data readed are also unpacked.
+     * If file is opened as PCK then the getData readed are also unpacked.
      * The reading will begin at location specified by internal file pointer and
      * this pointer will be shifted by number of bytes readed.
      *
-     * in: hFile - file to read from, buffer - buffer to hold the readed data
-     *     size - number of bytes to read from file
+     * in: hFile - file to read from, buffer - buffer to hold the readed getData
+     *     getSize - number of bytes to read from file
      * ret: number of bytes readed or -1 on error
      */
-    public long ReadFile(X2File hFile, byte[] buffer) {
+    public long ReadFile(XFile hFile, byte[] buffer) {
         return 0;
     }
 
@@ -146,7 +181,7 @@ public class X2FileDriver {
      *              position, X2FD_SEEK_END - end of file
      * ret: new offset or -1 on failure
      */
-    public long SeekFile(X2File hFile, int offset, X2FDFlag origin) {
+    public long SeekFile(XFile hFile, int offset, XFDFlag origin) {
         return 0;
     }
 
@@ -154,19 +189,19 @@ public class X2FileDriver {
      * in: hFile - file
      * ret: internal pointer position or -1 on failure
      */
-    public long FileTell(X2File hFile) {
+    public long FileTell(XFile hFile) {
         return 0;
     }
 
     /**
      * Works like WINAPI SetEndOfFile() function
-     * Will enlarge/shrink the file size so its end will be at location specified by
+     * Will enlarge/shrink the file getSize so its end will be at location specified by
      * internal file pointer.
      *
      * in: handle of file to change
      * ret: 0 on error, non zero on success
      */
-    public boolean SetEndOfFile(X2File hFile) {
+    public boolean SetEndOfFile(XFile hFile) {
         return false;
     }
 
@@ -179,33 +214,33 @@ public class X2FileDriver {
      * opneded from CAT archive.
      * Such file will be saved with last call to X2FD_CloseFile.
      *
-     * in: hFile - file to write to, pData - data to write, nCount- count of bytes
+     * in: hFile - file to write to, pData - getData to write, nCount- count of bytes
      *     to write
      * ret: number of bytes written or -1 on failure
      */
-    public long WriteFile(X2File file, byte[] data) {
+    public long WriteFile(XFile file, byte[] data) {
         return 0;
     }
 
     /**
      * Will return X2FILEINFO structure with information about file type
-     * (PCK/PLAIN), size and modifiation time.
+     * (PCK/PLAIN), getSize and modifiation time.
      *
      * in: name of file, pointer to structure to get the info
      * ret: zero on failure, non zero otherwise
      */
-    public X2FileInfo FileStat(String pszFileName) {
+    public XFileInfo FileStat(String pszFileName) {
         return null;
     }
 
     /**
      * Will return X2FILEINFO structure with information about file type
-     * (PCK/PLAIN), size and modifiation time
+     * (PCK/PLAIN), getSize and modifiation time
      *
      * in: handle to file, pointer to structure to get the info
      * ret: zero on failure, non zero otherwise
      */
-    public X2FileInfo FileStatByHandle(X2File file) {
+    public XFileInfo FileStatByHandle(XFile file) {
         return null;
     }
 
@@ -228,10 +263,12 @@ public class X2FileDriver {
      * in: name of file
      * ret: one of X2FD_FILETYPE_ constants (on error PLAIN is returned)
      */
-    public X2FDFlag X2FD_GetFileCompressionType(String pszFileName) {
+    public XFDFlag GetFileCompressionType(String pszFileName) throws XPathException {
         String pszCat;
         String pszFile;
-        X2FDFlag nRes = X2FDFlag.FILETYPE_PLAIN;
+        XFDFlag nRes = XFDFlag.FILETYPE_PLAIN;
+
+        XFile xFile = XPath.parseCATPath(pszFileName);
 
 //        CATPath catPath = ParseCATPath(pszFileName);
 //
@@ -239,7 +276,7 @@ public class X2FileDriver {
 //            nRes = GetFileCompressionType(pszFileName);
 //        } else {
 //
-//            X2CATBuffer cat = _OpenCatalog();
+//            X2CATBuffer getCat = _OpenCatalog();
 //
 //        }
 
@@ -247,8 +284,8 @@ public class X2FileDriver {
         return nRes;
     }
 
-    private X2CATBuffer _OpenCatalog(String pszName, String nCreateDisposition) {
-        X2CATBuffer catBuffer;
+    private XCATBuffer _OpenCatalog(String pszName, String nCreateDisposition) {
+        XCATBuffer catBuffer;
 
         return null;
     }
@@ -268,7 +305,7 @@ public class X2FileDriver {
     /**
      * Moves a file from one destination to another
      * Currently supports only moving files within catalog or across catalogs
-     * but does not support moving on real file system or between real and cat
+     * but does not support moving on real file system or between real and getCat
      * filesystem
      *
      * in: file name, new name where to move
@@ -288,7 +325,7 @@ public class X2FileDriver {
      * You do not need to open catalog prior to opening file from it. It's done
      * automatically. However you must use this function when creating new catalog.
      *
-     * Once the catalog is open, both its files (.cat and .dat) are exclusively
+     * Once the catalog is open, both its files (.getCat and .dat) are exclusively
      * locked so no other processes can access them.
      *
      * in: pszName - catalog name, nCreateDisposition - whether catalog should be
@@ -297,7 +334,7 @@ public class X2FileDriver {
      *     otherwise it's opened)
      * ret: catalog handle or 0 on failure
      */
-    public X2Catalog OpenCatalog(String pszName, X2FDFlag nCreateDisposition) {
+    public XCatalog OpenCatalog(String pszName, XFDFlag nCreateDisposition) {
         return null;
     }
 
@@ -305,7 +342,7 @@ public class X2FileDriver {
      * itself if it's opened by another call to X2FD_OpenCatalog or X2FD_OpenFile
      *
      * If some file was modified inside the catalog, the CAT file (the index file
-     * with extension .cat) will be overwriten upon closing to match to order of
+     * with extension .getCat) will be overwriten upon closing to match to order of
      * files in the modified DAT file.
      *
      * There is no way to verify that it was sucessfull.
@@ -313,11 +350,11 @@ public class X2FileDriver {
      * in: catalog to cleanUp
      * ret: 0 if handle is 0 - otherwise non zero
      */
-    public boolean CloseCatalog(X2Catalog hCat) {
+    public boolean CloseCatalog(XCatalog hCat) {
         return false;
     }
 
-    /**Delete given catalog (both .cat and .dat file)
+    /**Delete given catalog (both .getCat and .dat file)
      *
      * in: catalog to delete
      * ret: 0 if catalog cannot be deleted (is opened for example), non-zero
@@ -356,7 +393,7 @@ public class X2FileDriver {
      * in: file handle, time as time_t
      * ret: 0 on failure, nonzero in success
      */
-    public boolean SetFileTime(X2File hFile, long mtime) {
+    public boolean SetFileTime(XFile hFile, long mtime) {
         return false;
     }
 
@@ -371,7 +408,7 @@ public class X2FileDriver {
      * ret: search handle for use with X2FD_CatFindNextFile and X2FD_CatFindClose
      *      0 if no file name was found, nonzero otherwise
      */
-    public X2Find CatFindFirstFile(X2Catalog hCat, String pszFileName, X2CatFileInfo Info) {
+    public XFind CatFindFirstFile(XCatalog hCat, String pszFileName, XCatFileInfo Info) {
         return null;
     }
 
@@ -384,29 +421,29 @@ public class X2FileDriver {
      *     info
      * ret: 0 if no more occurrences were found, nonzero if there are more
      */
-    public boolean CatFindNextFile(X2Find hFind, X2CatFileInfo info) {
+    public boolean CatFindNextFile(XFind hFind, XCatFileInfo info) {
         return false;
     }
 
     /**
      * works like API FindClose
-     * it will delete all data associated with given search handle
+     * it will delete all getData associated with given search handle
      * you cannot call any search functions with this handle after that
      *
      * in: search handle returned by X2FD_CatFindFirst
      * ret: 0 on failure, nonzero otherwise
      */
-    public boolean CatFindClose(X2Find hFind) {
+    public boolean CatFindClose(XFind hFind) {
         return false;
     }
 
     /**
-     * will move data from one file to another
+     * will move getData from one file to another
      *
      * in: source file, destination file
      * ret: 0 on failure, nonzero otherwise
      */
-    public boolean CopyFile(X2File hSource, X2File hDestination) {
+    public boolean CopyFile(XFile hSource, XFile hDestination) {
         return false;
     }
 }

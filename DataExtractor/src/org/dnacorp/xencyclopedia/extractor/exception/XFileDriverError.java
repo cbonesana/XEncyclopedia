@@ -4,7 +4,7 @@ package org.dnacorp.xencyclopedia.extractor.exception;
  * Created by Claudio "Dna" Bonesana
  * Date: 16.08.2014 17:29
  */
-public interface X2FileDriverError {
+public interface XFileDriverError {
 
     public static final int X2FD_E_MSG                   = -1;
     public static final int X2FD_E_OK                    =  0;
@@ -39,7 +39,7 @@ public interface X2FileDriverError {
     public static final int X2FD_E_GZ_FLAGS              =  X2FD_GZ_BEGIN;     // reserved bits are set
     public static final int X2FD_E_GZ_HEADER             =  X2FD_GZ_BEGIN + 1; // no gzip header
     public static final int X2FD_E_GZ_TOOSMALL           =  X2FD_GZ_BEGIN + 2; // input stream is too small
-    public static final int X2FD_E_GZ_CRC                =  X2FD_GZ_BEGIN + 3; // data crc does not match
+    public static final int X2FD_E_GZ_CRC                =  X2FD_GZ_BEGIN + 3; // getData crc does not match
     public static final int X2FD_E_GZ_HCRC               =  X2FD_GZ_BEGIN + 4; // header crc does not match
     public static final int X2FD_E_GZ_COMPRESSION        =  X2FD_GZ_BEGIN + 5; // unsupported compression
     public static final int X2FD_E_GZ_DEFLATE            =  X2FD_GZ_BEGIN + 6; // deflate failed

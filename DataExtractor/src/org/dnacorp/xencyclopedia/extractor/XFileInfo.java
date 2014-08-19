@@ -4,7 +4,7 @@ package org.dnacorp.xencyclopedia.extractor;
  * Created by Claudio "Dna" Bonesana
  * Date: 16.08.2014 17:28
  */
-public class X2FileInfo {
+public class XFileInfo {
 
     private static final int X2FD_FI_FILE      = 1;
     private static final int X2FD_FI_PLAIN     = 2;
