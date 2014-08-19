@@ -173,9 +173,9 @@ public class FileBuffer {
         return m_data;
     }
 
-    public void data(byte[] buffer, long buffsize, long datasize) {
+    public void data(byte[] buffer, long datasize) {
         m_data=buffer;
-        m_allocated=buffsize;
+        m_allocated=buffer.length;
         m_size=datasize;
     }
 

@@ -1,5 +1,7 @@
-package org.dnacorp.xencyclopedia.extractor.cat;
+package org.dnacorp.xencyclopedia.extractor;
 
+import org.dnacorp.xencyclopedia.extractor.cat.X2CATBuffer;
+import org.dnacorp.xencyclopedia.extractor.cat.X2CATEntry;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

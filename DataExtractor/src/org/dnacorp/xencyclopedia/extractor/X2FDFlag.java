@@ -37,4 +37,8 @@ public enum X2FDFlag {
         return this.value & flag.value;
     }
 
+    public int value() {
+        return value;
+    }
+
 }

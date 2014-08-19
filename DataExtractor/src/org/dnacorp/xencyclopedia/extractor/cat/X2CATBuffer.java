@@ -2,6 +2,7 @@ package org.dnacorp.xencyclopedia.extractor.cat;
 
 import org.dnacorp.xencyclopedia.extractor.FileBuffer;
 import org.dnacorp.xencyclopedia.extractor.X2FDFlag;
+import org.dnacorp.xencyclopedia.extractor.crypt.Crypt;
 import org.dnacorp.xencyclopedia.extractor.exception.X2FileDriverError;
 import org.dnacorp.xencyclopedia.extractor.exception.X2FileDriverException;
 
@@ -133,17 +134,58 @@ public class X2CATBuffer extends ArrayList<X2CATEntry> {
         return true;
     }
 
-    public FileBuffer loadFile(String pszFile, int fileType) throws X2FileDriverException {
+    public FileBuffer loadFile(String pszFile, X2FDFlag fileType) throws X2FileDriverException, IOException {
         X2CATEntry entry = findFile(pszFile);
         if (entry == null)
             throw new X2FileDriverException("No entry: " + pszFile + ".", +X2FileDriverError.X2FD_E_CAT_NOENTRY);
         return loadFile(entry, fileType);
     }
 
-    public FileBuffer loadFile(X2CATEntry entry, int fileType) {
-        return null;
+    public FileBuffer loadFile(X2CATEntry entry, X2FDFlag fileType) throws X2FileDriverException, FileNotFoundException, IOException {
+        byte[] outdata;
+        long outsize;
+        long mtime=-1; // -1 mean "not set"
+
+        FileBuffer buff = new FileBuffer();
+        if(entry.size == 0){
+            outdata = null;
+            outsize = 0;
+            if(fileType == X2FDFlag.FILETYPE_AUTO)
+                fileType=X2FDFlag.FILETYPE_PCK;
+            buff.type |= fileType.value();
+        } else{
+            byte[] data = new byte[entry.getSize()];
+            RandomAccessFile raf = new RandomAccessFile(m_hDATFile, "r");
+            raf.seek(entry.offset);
+            raf.read(data,0,entry.getSize());
+            raf.close();
+
+            Crypt.DecryptCAT(data, entry.getSize());
+
+            if(fileType == X2FDFlag.FILETYPE_AUTO)
+                fileType = GetBufferCompressionType(data, entry.getSize());
+
+            if(fileType == X2FDFlag.FILETYPE_PLAIN) {       // plain file
+                outdata = data;
+                outsize = entry.getSize();
+                buff.type |= FileBuffer.IS_PLAIN;
+            } else {                                        // compressed
+                outdata = CatPCK.DecompressBuffer(data, entry.getSize(), fileType);
+                buff.type |= FileBuffer.fileTypeToBufferType(fileType);
+            }
+        }
+
+        entry.buffer = buff;
+        buff.cat(this);
+        buff.data(outdata, entry.getSize());
+        buff.mtime(mtime);
+        buff.binarysize(entry.getSize());
+        buff.pszName = m_pszDATName + "::" + entry.pszFileName;
+
+        return buff;
     }
-//    public filebuffer * createFile(String pszFile, int fileType);
+
+    //    public filebuffer * createFile(String pszFile, int fileType);
 //    public bool deleteFile(String pszFile);
 //    public bool saveFile(filebuffer *buff);
 //    public void closeFile(filebuffer *buff);
@@ -152,20 +194,23 @@ public class X2CATBuffer extends ArrayList<X2CATEntry> {
 //
 //    public bool renameFile(String pszFileName, String pszNewName);
 //
-    public int getFileCompressionType(String pszFileName) throws X2FileDriverException {
+    public int getFileCompressionType(String pszFileName) throws X2FileDriverException, IOException {
         int nRes;
-        char[] data = new char[3];
         int i = find(pszFileName);
 
-        if(i == -1) {
+        if(i == -1)
             throw new X2FileDriverException("Entry " + pszFileName + " not found.", X2FileDriverError.X2FD_E_CAT_NOENTRY);
-        } else {
-            if(it->size >= 3){
-                m_hDATFile.seek((io64::file::offset)it->offset, SEEK_SET);
-                m_hDATFile.read(data, 3);
-                nRes = GetBufferCompressionType(data, 3) == X2FD_FILETYPE_PCK;
-            }
+
+        X2CATEntry it = this.get(i);
+        if(it.size >= 3){
+            byte[] data = new byte[3];
+            RandomAccessFile raf = new RandomAccessFile(m_hDATFile, "r");
+            raf.seek(it.offset);
+            raf.read(data,0,3);
+            raf.close();
+            nRes = GetBufferCompressionType(data, 3) == X2FDFlag.FILETYPE_PCK;
         }
+
         return nRes;
     }
 //    public bool fileStat(String pszFileName, X2FILEINFO *info);
