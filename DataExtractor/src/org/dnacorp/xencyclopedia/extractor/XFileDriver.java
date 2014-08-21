@@ -1,6 +1,7 @@
 package org.dnacorp.xencyclopedia.extractor;
 
 import org.dnacorp.xencyclopedia.extractor.cat.XCATBuffer;
+import org.dnacorp.xencyclopedia.extractor.exception.XFileDriverError;
 import org.dnacorp.xencyclopedia.extractor.exception.XFileDriverException;
 import org.dnacorp.xencyclopedia.extractor.exception.XPathException;
 import org.dnacorp.xencyclopedia.extractor.utils.XPath;
@@ -55,51 +56,23 @@ public class XFileDriver {
      *                 X2FD_FILETYPE_PCK)
      * ret: handle of opened file or 0 on failure
      */
-    public XFile OpenFile(String pszName, XFDFlag nAccess, XFDFlag nCreateDisposition, XFDFlag nFileType) throws XFileDriverException {
+    public XFile XFDOpenFile(String pszName, XFDFlag nAccess, XFDFlag nCreateDisposition, XFDFlag nFileType) throws XFileDriverException, XPathException {
 
-        FileBuffer buffer;
+        if (
+                (nAccess != READ && nAccess != WRITE) ||
+                (nCreateDisposition != CREATE_NEW && nCreateDisposition != OPEN_EXISTING) ||
+                (nFileType != FILETYPE_PCK && nFileType != FILETYPE_DEFLATE && nFileType != FILETYPE_PLAIN && nFileType != FILETYPE_AUTO) ||
+                (nCreateDisposition == CREATE_NEW && nAccess == WRITE)
+           )
+            throw new XFileDriverException("Wrong flag.", XFileDriverError.X2FD_E_BAD_FLAGS);
 
-        if(nFileType == FILETYPE_AUTO)
-            nFileType = GetFileCompressionType(pszName);
-
-        buff = findBuffer(pszName);
-        if(buff){
-            // check the filemode
-            if(checkBuffMode(buff, nAccess)==false){
-                error(X2FD_E_FILE_BADMODE);
-                buff->release();
-                return null;
-            }
-        }
-        // plain files - we will always open new filebuffer
-        if(nFileType == FILETYPE_PLAIN){
-            if(buff) buff->release();
-            buff=NULL;
-        }
-
-        if(buff==NULL){
-            buff=new filebuffer();
-            bool bRes=buff->openFile(pszName, nAccess, nCreateDisposition, nFileType);
-            error(buff->error()); // always set the error
-            if(bRes==false){
-                buff->release();
-                buff=NULL;
-            }
-            else
-                g_bufflist.push_back(buff);
-        }
-
-        XFile f;
-        if(buff){
-            f=new xfile();
-            f->buffer(buff);
-            f->mode(nAccess);
-            buff->release();
-        }
+        XFile xFile;
+        if (pszName.contains("::"))
+            xFile = OpenFile(pszName, nAccess, nCreateDisposition, nFileType);
         else
-            f=NULL;
+            xFile = OpenFileCAT(pszName, nAccess, nCreateDisposition, nFileType);
 
-        return (f==NULL ? NULL : (X2FILE) f);
+        return xFile;
     }
 
     /**
@@ -115,8 +88,16 @@ public class XFileDriver {
      *                          X2FD_FILETYPE_PCK)
      * ret: handle of opened file or 0 on failure
      */
-    public XFile OpenFileConvert(String pszName, XFDFlag nCreateDisposition, XFDFlag nFileType, XFDFlag nConvertToFileType) {
-        return null;
+    public XFile XFDOpenFileConvert(String pszName, XFDFlag nCreateDisposition, XFDFlag nFileType, XFDFlag nConvertToFileType) throws XFileDriverException, XPathException {
+        XFile xFile=XFDOpenFile(pszName, WRITE, nCreateDisposition, nFileType);
+        if(xFile != null){
+            try {
+                xFile.convert(nConvertToFileType);
+            } finally {
+                XFDClose(xFile);
+            }
+        }
+        return xFile;
     }
 
     /**
@@ -129,8 +110,9 @@ public class XFileDriver {
      * in: hFile - handle to cleanUp
      * ret: non zero if file has been really closed and was saved ok, if the file
      *      was not closed or there was an error while saving, zero is returned
+     *      TODO
      */
-    public boolean CloseFile(XFile file) {
+    public boolean CloseFile(XFile xFile) {
         return false;
     }
 
@@ -142,8 +124,11 @@ public class XFileDriver {
      * in: handle of file
      * ret: getSize of file or -1 on failure
      */
-    public int FileSize(XFile hFile) {
-        return 0;
+    public long XFDFileSize(XFile xFile) {
+        long size = -1;
+        if (xFile != null)
+            size = xFile.getFileSize();
+        return size;
     }
 
     /**
@@ -151,8 +136,9 @@ public class XFileDriver {
      *
      * in: handle of file
      * ret: non zero if EOF is true, 0 otherwise
+     * TODO
      */
-    public boolean EOF(XFile file) {
+    public boolean EOF(XFile xFile) {
         return false;
     }
 
