@@ -5,6 +5,7 @@ import org.dnacorp.xencyclopedia.extractor.exception.XFileDriverError;
 import org.dnacorp.xencyclopedia.extractor.exception.XFileDriverException;
 import org.dnacorp.xencyclopedia.extractor.exception.XPathException;
 import org.dnacorp.xencyclopedia.extractor.utils.XPath;
+import org.dnacorp.xencyclopedia.files.XFile;
 
 import static org.dnacorp.xencyclopedia.extractor.XFDFlag.*;
 

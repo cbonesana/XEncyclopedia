@@ -1,4 +1,4 @@
-package org.dnacorp.xencyclopedia.extractor;
+package org.dnacorp.xencyclopedia.files;
 
 /**
  * Created by Claudio "Dna" Bonesana

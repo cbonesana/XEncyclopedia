@@ -1,6 +1,6 @@
 package org.dnacorp.xencyclopedia.extractor.utils;
 
-import org.dnacorp.xencyclopedia.extractor.XFile;
+import org.dnacorp.xencyclopedia.files.XFile;
 import org.dnacorp.xencyclopedia.extractor.exception.XPathException;
 
 /**

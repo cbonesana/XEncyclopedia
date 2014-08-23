@@ -1,6 +1,7 @@
 package org.dnacorp.xencyclopedia.extractor;
 
 import org.dnacorp.xencyclopedia.extractor.exception.XFileDriverException;
+import org.dnacorp.xencyclopedia.files.XFile;
 
 /**
  * Created by Claudio "Dna" Bonesana

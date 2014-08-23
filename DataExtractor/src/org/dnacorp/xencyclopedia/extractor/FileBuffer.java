@@ -216,7 +216,7 @@ public class FileBuffer {
     }
 
     public void setCat(XCATBuffer buff) {
-        buff.addRef();
+        buff.addReference();
         if(m_cat != null)
             m_cat.release();
         m_cat=buff;

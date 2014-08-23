@@ -48,4 +48,16 @@ public class CatPCK {
             throw new XFileDriverException("Error decompressing with GZip", XFileDriverError.X2FD_E_GZ_COMPRESSION);
         }
     }
+
+    public static XFDFlag GetBufferCompressionType(byte[] data, int size){
+        if(size >= 3){
+            byte magic = (byte)(data[0] ^ 0xC8);
+            if((data[1] ^ magic) == 0x1F && (data[2] ^ magic)==0x8B)
+                return XFDFlag.FILETYPE_PCK;
+        }
+        if(size >= 2 && (data[0] == 0x1F && data[1] == 0x8B))
+            return XFDFlag.FILETYPE_DEFLATE;
+
+        return XFDFlag.FILETYPE_PLAIN;
+    }
 }
