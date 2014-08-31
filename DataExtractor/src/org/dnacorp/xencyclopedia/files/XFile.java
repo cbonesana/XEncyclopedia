@@ -1,13 +1,13 @@
 package org.dnacorp.xencyclopedia.files;
 
+import org.apache.commons.io.IOUtils;
+import org.dnacorp.xencyclopedia.extractor.XFDFlag;
 import org.dnacorp.xencyclopedia.extractor.cat.CATInputStreamReader;
 import org.dnacorp.xencyclopedia.extractor.cat.XCATEntry;
 import org.dnacorp.xencyclopedia.extractor.exception.XFileDriverError;
 import org.dnacorp.xencyclopedia.extractor.exception.XFileDriverException;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Files;
@@ -15,6 +15,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import static java.nio.file.StandardOpenOption.READ;
 
@@ -129,17 +131,77 @@ public class XFile {
             ByteBuffer byteBuffer = ByteBuffer.allocate((int)entry.getSize());
 
             sbc.position(entry.getOffset());
-            sbc.read(byteBuffer);
+            int read = sbc.read(byteBuffer);
             sbc.close();
 
-            xDATEntry.setBuffer(byteBuffer);
+            if (read != byteBuffer.capacity())
+                throw new XFileDriverException("Read " + read  + "byte, expected " + byteBuffer.capacity() + ".", XFileDriverError.XFD_E_ERROR);
+            if (read == 0)
+                throw new XFileDriverException("Decompression of an empty file.", XFileDriverError.XFD_E_FILE_EMPTY);
+
+            XFDFlag flag = XFDFlag.FILETYPE_PLAIN;
+            if (entry.getFilePath().endsWith(".pck"))
+                flag = XFDFlag.FILETYPE_PCK;
+            xDATEntry.setBuffer(decompressBuffer(byteBuffer, flag));
 
         } catch (FileNotFoundException e) {
             throw new XFileDriverException("File " + positionDATName + " not found.", XFileDriverError.XFD_E_FILE_EXIST);
         } catch (IOException e) {
-            throw new XFileDriverException("Can not read entry in dat file.", XFileDriverError.XFD_E_FILE_ERROR);
+            throw new XFileDriverException("Can't read entry in dat file.", XFileDriverError.XFD_E_FILE_ERROR);
         }
 
         return xDATEntry;
+    }
+
+    public static ByteBuffer decompressBuffer(ByteBuffer data_in, XFDFlag compressionMethod) throws XFileDriverException {
+        byte[] decompressed = data_in.array();
+        byte[] data;
+
+        if (compressionMethod == XFDFlag.FILETYPE_PCK){
+            int magic = (byte)(decompressed[0] ^ 0xC8);
+            System.out.println(decompressed[0] + " -> " + magic);
+            data = new byte[decompressed.length-1];
+            for(int i=0; i<decompressed.length-1; i++)
+                data[i] = (byte)(decompressed[i+1] ^ magic);
+        } else {
+            data = decompressed;
+        }
+
+        try {
+            GZIPInputStream gZis = new GZIPInputStream(new ByteArrayInputStream(data));
+            ByteArrayOutputStream boos = new ByteArrayOutputStream();
+            IOUtils.copy(gZis, boos);
+            return ByteBuffer.wrap(boos.toByteArray());
+        } catch (IOException e) {
+            throw new XFileDriverException("Error decompressing with GZip", XFileDriverError.XFD_E_GZ_COMPRESSION);
+        }
+    }
+
+    public static ByteBuffer compressBuffer(ByteBuffer data_in, XFDFlag compressionType) throws XFileDriverException {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+        try{
+            GZIPOutputStream gZos = new GZIPOutputStream(byteArrayOutputStream);
+            gZos.write(data_in.array());
+            gZos.close();
+        } catch(IOException e){
+            throw new XFileDriverException("Error compressing with GZip", XFileDriverError.XFD_E_GZ_COMPRESSION);
+        }
+
+        byte[] compressed = byteArrayOutputStream.toByteArray();
+        byte[] data_out = new byte[compressed.length+1];
+
+        if (compressionType == XFDFlag.FILETYPE_PCK) {
+            int m = (byte)System.nanoTime();
+            byte magic = (byte)(m ^ 0xC8);
+            System.out.println(m + " -> " + magic);
+            data_out[0] = magic;
+            for (int i=1; i<data_out.length; i++)
+                data_out[i] = (byte)(compressed[i-1] ^ magic);
+        } else {
+            data_out = compressed;
+        }
+
+        return ByteBuffer.wrap(data_out);
     }
 }

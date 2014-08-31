@@ -69,4 +69,8 @@ public class XCATEntry {
     public FileBuffer getBuffer() {
         return buffer;
     }
+
+    public String getFilePath() {
+        return filePath;
+    }
 }
