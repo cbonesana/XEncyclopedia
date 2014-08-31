@@ -148,7 +148,7 @@ public class XCATBuffer extends ArrayList<XCATEntry> {
         byte[] outdata;
         long mtime=-1;  // -1 mean "not set"
 
-        FileBuffer buff = new FileBuffer();
+/*        FileBuffer buff = new FileBuffer();
         if(entry.size == 0){
             outdata = null;
             if(fileType == FILETYPE_AUTO)
@@ -181,8 +181,8 @@ public class XCATBuffer extends ArrayList<XCATEntry> {
         buff.setTime(mtime);
         buff.setBinarySize(entry.getSize());
         buff.pszName = m_pszDATName + "::" + entry.filePath;
-
-        return buff;
+*/
+        return null;
     }
 
     public FileBuffer createFile(String pszFile, XFDFlag fileType) throws XFileDriverException {

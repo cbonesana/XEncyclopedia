@@ -36,10 +36,10 @@ public class XCATEntry {
         return "ENTRY: " + filePath + " " + size + " (" + offset + ")";
     }
 
-    public int getSize() throws XFileDriverException {
-        if (size > Integer.MAX_VALUE)
-            throw new XFileDriverException("Entry " + filePath + " is too big (" + size + "byte)", XFileDriverError.XFD_E_CAT_INVALIDSIZE);
-        return (int)size;
+    public long getSize() throws XFileDriverException {
+//        if (size > Integer.MAX_VALUE)
+//            throw new XFileDriverException("Entry " + filePath + " is too big (" + size + "byte)", XFileDriverError.XFD_E_CAT_INVALIDSIZE);
+        return size;
     }
 
     public void setParent(XFile parent) {
@@ -56,5 +56,17 @@ public class XCATEntry {
 
     public void setSize(long size) {
         this.size = size;
+    }
+
+    public XFile getParent() {
+        return parent;
+    }
+
+    public long getOffset() {
+        return offset;
+    }
+
+    public FileBuffer getBuffer() {
+        return buffer;
     }
 }

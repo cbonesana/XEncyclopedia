@@ -17,7 +17,7 @@ public class XPath {
     public static XFile parseCATPath(String pszName) throws XPathException, XFileDriverException {
         String[] tokens = pszName.split("::");
         if (tokens.length < 2)
-            throw new XPathException("THe given pattern is invalid: " + pszName);
+            throw new XPathException("The given pattern is invalid: " + pszName);
 
         return new XFile(tokens[0]/*, tokens[1]*/);
     }

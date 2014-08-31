@@ -6,9 +6,17 @@ import org.dnacorp.xencyclopedia.extractor.exception.XFileDriverError;
 import org.dnacorp.xencyclopedia.extractor.exception.XFileDriverException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.SeekableByteChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
+
+import static java.nio.file.StandardOpenOption.READ;
 
 /**
  * Created by Claudio "Dna" Bonesana
@@ -57,6 +65,10 @@ public class XFile {
             throw new XFileDriverException("File " + positionCATName + " can not be read.", XFileDriverError.XFD_E_FILE_ACCESS);
         if (!DATFile.canRead())
             throw new XFileDriverException("File " + positionDATName + " can not be read.", XFileDriverError.XFD_E_FILE_ACCESS);
+        if (CATFile.length() == 0)
+            throw new XFileDriverException("File " + positionCATName + " is empty.", XFileDriverError.XFD_E_FILE_EMPTY);
+        if (DATFile.length() == 0)
+            throw new XFileDriverException("File " + positionDATName + " is empty.", XFileDriverError.XFD_E_FILE_EMPTY);
     }
 
     private void readCAT() throws XFileDriverException, IOException {
@@ -103,7 +115,31 @@ public class XFile {
         return xCATEntryList;
     }
 
-    public void readDATEntry(XCATEntry entry) {
+    public XDATEntry readDATEntry(XCATEntry entry) throws XFileDriverException {
+        if (entry.getParent() != this)
+            throw new XFileDriverException("Entry " + entry + " doesn't belong to the entry list.", XFileDriverError.XFD_E_CAT_INVALIDFILENAME);
 
+        XDATEntry xDATEntry = new XDATEntry(entry);
+
+        try {
+            Path filePath = DATFile.toPath();
+            SeekableByteChannel sbc = Files.newByteChannel(filePath, EnumSet.of(READ));
+
+            // this is safe because we don't have compressed file of more than 2GB
+            ByteBuffer byteBuffer = ByteBuffer.allocate((int)entry.getSize());
+
+            sbc.position(entry.getOffset());
+            sbc.read(byteBuffer);
+            sbc.close();
+
+            xDATEntry.setBuffer(byteBuffer);
+
+        } catch (FileNotFoundException e) {
+            throw new XFileDriverException("File " + positionDATName + " not found.", XFileDriverError.XFD_E_FILE_EXIST);
+        } catch (IOException e) {
+            throw new XFileDriverException("Can not read entry in dat file.", XFileDriverError.XFD_E_FILE_ERROR);
+        }
+
+        return xDATEntry;
     }
 }
