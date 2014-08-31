@@ -1,5 +1,6 @@
 package org.dnacorp.xencyclopedia.extractor.utils;
 
+import org.dnacorp.xencyclopedia.extractor.exception.XFileDriverException;
 import org.dnacorp.xencyclopedia.files.XFile;
 import org.dnacorp.xencyclopedia.extractor.exception.XPathException;
 
@@ -13,11 +14,11 @@ public class XPath {
         return null;
     }
 
-    public static XFile parseCATPath(String pszName) throws XPathException {
+    public static XFile parseCATPath(String pszName) throws XPathException, XFileDriverException {
         String[] tokens = pszName.split("::");
         if (tokens.length < 2)
             throw new XPathException("THe given pattern is invalid: " + pszName);
 
-        return new XFile(tokens[0], tokens[1]);
+        return new XFile(tokens[0]/*, tokens[1]*/);
     }
 }

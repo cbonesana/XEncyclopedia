@@ -4,6 +4,8 @@ import org.dnacorp.xencyclopedia.extractor.FileBuffer;
 import org.dnacorp.xencyclopedia.extractor.XFDFlag;
 import org.dnacorp.xencyclopedia.extractor.crypt.Crypt;
 import org.dnacorp.xencyclopedia.extractor.exception.XFileDriverException;
+import org.dnacorp.xencyclopedia.extractor.exception.XPathException;
+import org.dnacorp.xencyclopedia.extractor.utils.XPath;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -75,7 +77,7 @@ public class XCATBuffer extends ArrayList<XCATEntry> {
 
     public XCATEntry findFile(String pszName){
         for (XCATEntry XCATEntry : this)
-            if (XCATEntry.pszFileName.equals(pszName))
+            if (XCATEntry.filePath.equals(pszName))
                 return XCATEntry;
         return null;
     }
@@ -119,7 +121,7 @@ public class XCATBuffer extends ArrayList<XCATEntry> {
                 if (last == -1)
                     throw new IOException("CAT file " + pszName + " contains invalid lines.");
                 XCATEntry info = new XCATEntry();    // create a new X2CATEntry
-                info.pszFileName = line.substring(0,last);
+                info.filePath = line.substring(0,last);
                 info.offset = offset;
                 info.size   = Long.parseLong(line.substring(last+1));
                 add(info);
@@ -138,7 +140,7 @@ public class XCATBuffer extends ArrayList<XCATEntry> {
     public FileBuffer loadFile(String pszFile, XFDFlag fileType) throws XFileDriverException, IOException {
         XCATEntry entry = findFile(pszFile);
         if (entry == null)
-            throw new XFileDriverException("No entry: " + pszFile + ".", + X2FD_E_CAT_NOENTRY);
+            throw new XFileDriverException("No entry: " + pszFile + ".", +XFD_E_CAT_NOENTRY);
         return loadFile(entry, fileType);
     }
 
@@ -178,7 +180,7 @@ public class XCATBuffer extends ArrayList<XCATEntry> {
         buff.setData(outdata, entry.getSize());
         buff.setTime(mtime);
         buff.setBinarySize(entry.getSize());
-        buff.pszName = m_pszDATName + "::" + entry.pszFileName;
+        buff.pszName = m_pszDATName + "::" + entry.filePath;
 
         return buff;
     }
@@ -186,10 +188,10 @@ public class XCATBuffer extends ArrayList<XCATEntry> {
     public FileBuffer createFile(String pszFile, XFDFlag fileType) throws XFileDriverException {
 
         if(!isValidFileName(pszFile))
-            throw new XFileDriverException("Given filename " + pszFile + " is not valid.", X2FD_E_CAT_INVALIDFILENAME);
+            throw new XFileDriverException("Given filename " + pszFile + " is not valid.", XFD_E_CAT_INVALIDFILENAME);
 
         if(fileType != FILETYPE_PCK && fileType != FILETYPE_PLAIN && fileType != FILETYPE_DEFLATE)
-            throw new XFileDriverException("Given file type is not valid.", X2FD_E_BAD_FLAGS);
+            throw new XFileDriverException("Given file type is not valid.", XFD_E_BAD_FLAGS);
 
         XCATEntry entry = new XCATEntry();
         FileBuffer buff = new FileBuffer();
@@ -201,7 +203,7 @@ public class XCATBuffer extends ArrayList<XCATEntry> {
         buff.setCat(this);
         buff.setTime(System.currentTimeMillis());
 
-        entry.pszFileName = pszFile;
+        entry.filePath = pszFile;
         entry.buffer = buff;
 
         for(XCATEntry xcatEntry: this)
@@ -216,7 +218,7 @@ public class XCATBuffer extends ArrayList<XCATEntry> {
     public boolean deleteFile(String pszFileName) throws XFileDriverException {
         XCATEntry entry = find(pszFileName);
         if(entry == null)
-        throw new XFileDriverException("Entry " + pszFileName + " not found.", X2FD_E_CAT_NOENTRY);
+            throw new XFileDriverException("Entry " + pszFileName + " not found.", XFD_E_CAT_NOENTRY);
 
         // shrink the DAT and delete the entry
         // calculate size of data below our file
@@ -253,9 +255,9 @@ public class XCATBuffer extends ArrayList<XCATEntry> {
             } while (sizeLeft>0);
 
         } catch (FileNotFoundException e) {
-            throw new XFileDriverException("DAT file " + m_pszDATName + " not found.", X2FD_E_FILE_ERROR);
+            throw new XFileDriverException("DAT file " + m_pszDATName + " not found.", XFD_E_FILE_ERROR);
         } catch (IOException e) {
-            throw new XFileDriverException("IOException writing on DAT file " + m_pszDATName + ".", X2FD_E_FILE_ERROR);
+            throw new XFileDriverException("IOException writing on DAT file " + m_pszDATName + ".", XFD_E_FILE_ERROR);
         }
 
         // shift the offsets
@@ -268,7 +270,7 @@ public class XCATBuffer extends ArrayList<XCATEntry> {
         return true;
     }
 
-    public boolean saveFile(FileBuffer buff) {
+/*    public boolean saveFile(FileBuffer buff) throws XPathException, XFileDriverException {
         // - find the buffer
         // - check number of locks
         // - save that shit:
@@ -281,59 +283,47 @@ public class XCATBuffer extends ArrayList<XCATEntry> {
         byte[] data;
         long dataLen;
         long specLen;
-        long sizeLeft;
+        long sizeLeft = 0;
 
-        ParseCATPath(buff->pszName, &pszCAT, &pszFile);
-        iterator pos=find(pszFile);
-        if(pos==end()){
-            error(X2FD_E_CAT_NOENTRY);
-            return false;
-        }
+        XPath.parseCATPath(buff.pszName);
+        int pos = findPosition(pszFile);
+        if(pos == -1)
+            throw new XFileDriverException("Can't save: " + pszFile + " not found.", XFD_E_CAT_NOENTRY);
 
-        x2catentry *entry=*pos;
-        if(buff->locked_r() > 1){
-            error(X2FD_E_FILE_LOCKED);
-            return false;
-        }
+        XCATEntry entry = this.get(pos);
+
+        if(buff.getLockRead() > 1)
+            throw new XFileDriverException("Can't save: " + pszFile + " is locked.", XFD_E_FILE_LOCKED);
 
         // calculate size of data below our file
-        sizeLeft=0;
-        for(iterator it=pos + 1; it!=end(); ++it){
-            sizeLeft+=it->size;
-        }
-        if(buff->type & filebuffer::ISPLAIN){
-            data=buff->data();
-            dataLen=buff->size();
-            specLen=dataLen;
-        }
-        // compressed
-        else{
+        for (int i=pos; i<this.size(); i++)
+            sizeLeft += this.get(i).size;
+
+        // plain file
+        if((buff.type & FileBuffer.IS_PLAIN) > 1){
+            data = buff.getData();
+            dataLen = buff.getSize();
+            specLen = dataLen;
+        } else{ // compressed
             // pack the file - if it fails the DAT remains unchanged
-            if(error(CompressBuffer(buff->data(), buff->size(), buff->mtime(), filebuffer::bufferTypeToFileType(buff->type), &gz, &magic)) != 0) return false;
-            data = gz.buffer();
-            dataLen = gz.size();
-            specLen = dataLen + (buff->type & filebuffer::ISPCK ? 1 : 0);
+            byte[] compressed = CatPCK.CompressBuffer(buff.getData(),FileBuffer.bufferTypeToFileType(buff.type));
+
+            dataLen = compressed.length;
+            specLen = dataLen + ((buff.type & FileBuffer.IS_PCK) > 1 ? 1 : 0);
         }
 
-        bool bNoMove = (specLen == entry->size);
+        boolean bNoMove = (specLen == entry.size);
 
         // there are some data after our file and size of old and new buffer differs
-        if(sizeLeft > 0 && bNoMove==false){
-            byte *buff;
+        if(sizeLeft > 0 && !bNoMove){
             // buffer size (max 20 MB)
-            size_t size=(size_t)__min(sizeLeft, 20480000);
-            buff=new byte[size];
-            if(buff==0) {
-                error(X2FD_E_MALLOC);
-                return false;
-            }
+            byte[] b = new byte[20480000];
 
             // now move the data after our file in the DAT
+            long rpos, wpos, s, sl=sizeLeft;
 
-            io64::file::size rpos, wpos, s, sl=sizeLeft;
-
-            rpos=entry->offset + entry->size;
-            wpos=entry->offset;
+            rpos=entry.offset + entry.size;
+            wpos=entry.offset;
             do{
                 s=__min(size, sl);
                 m_hDATFile.seek((io64::file::offset)rpos, SEEK_SET);
@@ -387,19 +377,19 @@ public class XCATBuffer extends ArrayList<XCATEntry> {
 
         return true;
 
-    }
-//    public void closeFile(filebuffer *buff);
+    }*/
+    //    public void closeFile(filebuffer *buff);
 //
 //    public bool create(String pszName);
 //
-//    public bool renameFile(String pszFileName, String pszNewName);
+//    public bool renameFile(String positionDATName, String pszNewName);
 //
-    public static XFDFlag getFileCompressionType(String pszFileName) throws XFileDriverException, IOException {
+ /*   public static XFDFlag getFileCompressionType(String pszFileName) throws XFileDriverException, IOException {
         int nRes;
         int i = find(pszFileName);
 
         if(i == -1)
-            throw new XFileDriverException("Entry " + pszFileName + " not found.", X2FD_E_CAT_NOENTRY);
+            throw new XFileDriverException("Entry " + pszFileName + " not found.", XFD_E_CAT_NOENTRY);
 
         XCATEntry entry = this.get(i);
         if(entry.size >= 3){
@@ -412,15 +402,15 @@ public class XCATBuffer extends ArrayList<XCATEntry> {
         }
 
         return nRes;
-    }
-//    public bool fileStat(String pszFileName, X2FILEINFO *info);
+    }*/
+//    public bool fileStat(String positionDATName, X2FILEINFO *info);
 //
 //    public iterator findFirstFile(String pattern);
 //    public iterator findNextFile(iterator it, String pattern);
 
     private int findPosition(String pszFileName) {
         for (int i = 0; i < this.size(); i++) {
-            if (this.get(i).pszFileName.equals(pszFileName))
+            if (this.get(i).filePath.equals(pszFileName))
                 return i;
         }
         return -1;
@@ -428,7 +418,7 @@ public class XCATBuffer extends ArrayList<XCATEntry> {
 
     private XCATEntry find(String pszFileName){
         for (XCATEntry xCATEntry : this) {
-            if (xCATEntry.pszFileName.equals(pszFileName))
+            if (xCATEntry.filePath.equals(pszFileName))
                 return xCATEntry;
         }
         return null;

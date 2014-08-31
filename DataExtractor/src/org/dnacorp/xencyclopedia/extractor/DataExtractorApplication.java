@@ -1,6 +1,7 @@
 package org.dnacorp.xencyclopedia.extractor;
 
 import org.dnacorp.xencyclopedia.extractor.exception.XFileDriverException;
+import org.dnacorp.xencyclopedia.extractor.exception.XPathException;
 import org.dnacorp.xencyclopedia.files.XFile;
 
 /**
@@ -43,7 +44,7 @@ public class DataExtractorApplication {
     private void pckRead(String pck) {
         try {
             myRead(pck);
-        } catch (XFileDriverException e) {
+        } catch (XFileDriverException | XPathException e) {
             e.printStackTrace();
         }
     }
@@ -51,7 +52,7 @@ public class DataExtractorApplication {
     private void pckWrite(String pck) {
         try {
             myWrite(pck, true);
-        } catch (XFileDriverException e) {
+        } catch (XFileDriverException | XPathException e) {
             e.printStackTrace();
         }
     }
@@ -59,7 +60,7 @@ public class DataExtractorApplication {
     private void txtRead(String txt) {
         try {
             myRead(txt);
-        } catch (XFileDriverException e) {
+        } catch (XFileDriverException | XPathException e) {
             e.printStackTrace();
         }
     }
@@ -67,7 +68,7 @@ public class DataExtractorApplication {
     private void txtWrite(String txt) {
         try {
             myWrite(txt, false);
-        } catch (XFileDriverException e) {
+        } catch (XFileDriverException | XPathException e) {
             e.printStackTrace();
         }
     }
@@ -85,7 +86,7 @@ public class DataExtractorApplication {
     private void catPckRead(String pck) {
         try {
             myRead(pck);
-        } catch (XFileDriverException e) {
+        } catch (XFileDriverException | XPathException e) {
             e.printStackTrace();
         }
     }
@@ -93,7 +94,7 @@ public class DataExtractorApplication {
     private void catPckWrite(String pck) {
         try {
             myWrite(pck, true);
-        } catch (XFileDriverException e) {
+        } catch (XFileDriverException | XPathException e) {
             e.printStackTrace();
         }
     }
@@ -101,7 +102,7 @@ public class DataExtractorApplication {
     private void catTxtRead(String txt) {
         try {
             myRead(txt);
-        } catch (XFileDriverException e) {
+        } catch (XFileDriverException | XPathException e) {
             e.printStackTrace();
         }
     }
@@ -109,7 +110,7 @@ public class DataExtractorApplication {
     private void catTxtWrite(String txt) {
         try {
             myWrite(txt, false);
-        } catch (XFileDriverException e) {
+        } catch (XFileDriverException | XPathException e) {
             e.printStackTrace();
         }
     }
@@ -137,7 +138,7 @@ public class DataExtractorApplication {
         System.out.println("End of list.\n");
     }
 
-    private void myRead(String filename) throws XFileDriverException {
+    private void myRead(String filename) throws XFileDriverException, XPathException {
         XFileDriver X2FD = new XFileDriver();
         // open the file
         System.out.println();
@@ -145,7 +146,7 @@ public class DataExtractorApplication {
         System.out.println("* Reading file " + filename);
         System.out.println("************");
         System.out.println("Opening file " + filename);
-        XFile file = X2FD.OpenFile(
+        XFile file = X2FD.XFDOpenFile(
                 filename,           // file name
                 XFDFlag.READ,          // open for reading
                 XFDFlag.OPEN_EXISTING, // don't create new if it doesn't exist
@@ -159,7 +160,7 @@ public class DataExtractorApplication {
         System.out.println("File type is " + /*(fi.flags & X2FD_FI_PLAIN)*/ (fi.isPlain() ? "PLAIN" : "PCK"));
 
         // get file getSize
-        int size=X2FD.FileSize(file);
+        int size= (int) X2FD.XFDFileSize(file);
         System.out.println("File getSize is " + size + " bytes");
         // read the getData
         long data = X2FD.ReadFile(file,null);
@@ -190,7 +191,7 @@ public class DataExtractorApplication {
         System.out.println("Close file returned: " + ret);
     }
 
-    private void myWrite(String filename, boolean bPCK) throws XFileDriverException {
+    private void myWrite(String filename, boolean bPCK) throws XFileDriverException, XPathException {
         XFileDriver X2FD = new XFileDriver();
 
         System.out.println();
@@ -199,14 +200,14 @@ public class DataExtractorApplication {
         System.out.println("************");
         System.out.println("Opening file " + filename);
         // open the file
-        XFile file=X2FD.OpenFile(filename, // file name
+        XFile file=X2FD.XFDOpenFile(filename, // file name
                 XFDFlag.WRITE, // open for read/write
                 XFDFlag.CREATE_NEW, // create new if it doesn't exist
                 bPCK ? XFDFlag.FILETYPE_PCK : XFDFlag.FILETYPE_PLAIN
         );
 
         // get the file getSize
-        int size=X2FD.FileSize(file);
+        int size= (int) X2FD.XFDFileSize(file);
 
         // if getSize is  > 0 then the file already exists and contains something
         // we will display it

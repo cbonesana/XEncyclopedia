@@ -65,13 +65,13 @@ public class XFileDriver {
                 (nFileType != FILETYPE_PCK && nFileType != FILETYPE_DEFLATE && nFileType != FILETYPE_PLAIN && nFileType != FILETYPE_AUTO) ||
                 (nCreateDisposition == CREATE_NEW && nAccess == WRITE)
            )
-            throw new XFileDriverException("Wrong flag.", XFileDriverError.X2FD_E_BAD_FLAGS);
+            throw new XFileDriverException("Wrong flag.", XFileDriverError.XFD_E_BAD_FLAGS);
 
         XFile xFile;
-        if (pszName.contains("::"))
-            xFile = OpenFile(pszName, nAccess, nCreateDisposition, nFileType);
-        else
-            xFile = OpenFileCAT(pszName, nAccess, nCreateDisposition, nFileType);
+//        if (pszName.contains("::"))
+            xFile = XFDOpenFile(pszName, nAccess, nCreateDisposition, nFileType);
+//        else
+//            xFile = OpenFileCAT(pszName, nAccess, nCreateDisposition, nFileType);
 
         return xFile;
     }
@@ -91,13 +91,13 @@ public class XFileDriver {
      */
     public XFile XFDOpenFileConvert(String pszName, XFDFlag nCreateDisposition, XFDFlag nFileType, XFDFlag nConvertToFileType) throws XFileDriverException, XPathException {
         XFile xFile=XFDOpenFile(pszName, WRITE, nCreateDisposition, nFileType);
-        if(xFile != null){
-            try {
-                xFile.convert(nConvertToFileType);
-            } finally {
-                XFDClose(xFile);
-            }
-        }
+//        if(xFile != null){
+//            try {
+//                xFile.convert(nConvertToFileType);
+//            } finally {
+//                XFDClose(xFile);
+//            }
+//        }
         return xFile;
     }
 
@@ -127,8 +127,8 @@ public class XFileDriver {
      */
     public long XFDFileSize(XFile xFile) {
         long size = -1;
-        if (xFile != null)
-            size = xFile.getFileSize();
+//        if (xFile != null)
+//            size = xFile.getFileSize();
         return size;
     }
 
@@ -250,17 +250,17 @@ public class XFileDriver {
      * in: name of file
      * ret: one of X2FD_FILETYPE_ constants (on error PLAIN is returned)
      */
-    public XFDFlag GetFileCompressionType(String pszFileName) throws XPathException {
+    public XFDFlag GetFileCompressionType(String pszFileName) throws XPathException, XFileDriverException {
         String pszCat;
         String pszFile;
         XFDFlag nRes = XFDFlag.FILETYPE_PLAIN;
 
         XFile xFile = XPath.parseCATPath(pszFileName);
 
-//        CATPath catPath = ParseCATPath(pszFileName);
+//        CATPath catPath = ParseCATPath(positionDATName);
 //
 //        if (pszCat == null) {
-//            nRes = GetFileCompressionType(pszFileName);
+//            nRes = GetFileCompressionType(positionDATName);
 //        } else {
 //
 //            X2CATBuffer getCat = _OpenCatalog();
@@ -386,7 +386,7 @@ public class XFileDriver {
 
     /**
      * works like API FindFirstFile but within catalog
-     * it will find all occurrences of file pszFileName in catalog
+     * it will find all occurrences of file positionDATName in catalog
      *
      * you can use wildcards (* ?) in file name the same way as in
      * API FindFirstFile

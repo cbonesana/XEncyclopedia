@@ -240,8 +240,8 @@ public class FileBuffer {
     }
 
     public int openFile(String pszName, XFDFlag nAccess, XFDFlag nCreateDisposition, XFDFlag nFileType) throws IOException {
-        if(nFileType == XFDFlag.FILETYPE_AUTO)
-            nFileType = GetFileCompressionType(pszName);
+//        if(nFileType == XFDFlag.FILETYPE_AUTO)
+//            nFileType = GetFileCompressionType(pszName);
 
         int bRes;
 
