@@ -25,13 +25,13 @@ public class XCATBufferTest {
 
     }
 
-//    @Test
+    @Test
     public void testOpenCAT() throws Exception {
         for (XCATEntry XCATEntry : xFile.getEntryList())
             System.out.println(XCATEntry);
     }
 
-//    @Test
+    @Test
     public void testOpenDAT() throws Exception {
         XCATEntry xcatEntry = xFile.getEntryList().get(0);
         XDATEntry xdatEntry = xFile.readDATEntry(xcatEntry);
@@ -47,14 +47,10 @@ public class XCATBufferTest {
 
         try {
             ByteBuffer compressed = XFile.compressBuffer(bb, XFDFlag.FILETYPE_PCK);
-            for (byte b : compressed.array())
-                System.out.print((char) b);
-            System.out.println();
-
             ByteBuffer decompressed = XFile.decompressBuffer(compressed, XFDFlag.FILETYPE_PCK);
-            for (byte b : decompressed.array())
-                System.out.print((char) b);
-            System.out.println();
+
+            for (int i=0; i<str.toCharArray().length; i++)
+                assert(str.toCharArray()[i] == (char)decompressed.array()[i]);
 
         } catch (XFileDriverException e) {
             e.printStackTrace();

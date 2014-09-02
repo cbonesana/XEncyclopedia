@@ -34,9 +34,6 @@ public class XFile {
 
     protected List<XCATEntry> xCATEntryList = new ArrayList<>();
 
-    /**
-     * @param archiveName
-     */
     public XFile(String archiveName) throws XFileDriverException {
         if (archiveName.endsWith(".cat") || archiveName.endsWith(".dat"))
             archiveName = archiveName.substring(0,archiveName.indexOf("."));
@@ -158,11 +155,12 @@ public class XFile {
         byte[] data;
 
         if (compressionMethod == XFDFlag.FILETYPE_PCK){
-            int magic = (byte)(decompressed[0] ^ 0xC8);
-            System.out.println(decompressed[0] + " -> " + magic);
-            data = new byte[decompressed.length-1];
-            for(int i=0; i<decompressed.length-1; i++)
-                data[i] = (byte)(decompressed[i+1] ^ magic);
+            data = new byte[decompressed.length];
+            System.out.print(String.format("%24s", " "));
+            for(int i=0; i<decompressed.length; i++) {
+                data[i] = (byte) ((int)decompressed[i] ^ 0x33);
+                System.out.print(String.format("%3x", data[i]));
+            }
         } else {
             data = decompressed;
         }
@@ -189,19 +187,22 @@ public class XFile {
         }
 
         byte[] compressed = byteArrayOutputStream.toByteArray();
-        byte[] data_out = new byte[compressed.length+1];
+        byte[] data_out = new byte[compressed.length];
 
         if (compressionType == XFDFlag.FILETYPE_PCK) {
-            int m = (byte)System.nanoTime();
-            byte magic = (byte)(m ^ 0xC8);
-            System.out.println(m + " -> " + magic);
-            data_out[0] = magic;
-            for (int i=1; i<data_out.length; i++)
-                data_out[i] = (byte)(compressed[i-1] ^ magic);
+            for (int i=0; i<data_out.length; i++)
+                data_out[i] = (byte)((int)compressed[i] ^ 0x33);
         } else {
             data_out = compressed;
         }
 
         return ByteBuffer.wrap(data_out);
+    }
+
+    public static void printByteArray(String str, byte[] data) {
+        System.out.print(String.format("%-24s", str));
+        for (byte b : data)
+            System.out.print(String.format("%3x",b));
+        System.out.println();
     }
 }
