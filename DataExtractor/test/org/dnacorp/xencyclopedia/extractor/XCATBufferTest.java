@@ -35,7 +35,7 @@ public class XCATBufferTest {
     @Test
     public void testOpenDAT() throws Exception {
         XCATEntry xcatEntry = xFile.getEntryList().get(0);
-        XDATEntry xdatEntry = xFile.readDATEntry(xcatEntry);
+        XDATEntry xdatEntry = xcatEntry.getDATEntry();
 
         for (byte b : xdatEntry.getBuffer().array())
             System.out.print((char)b);

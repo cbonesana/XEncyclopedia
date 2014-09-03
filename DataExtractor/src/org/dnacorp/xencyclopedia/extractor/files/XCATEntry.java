@@ -16,10 +16,8 @@ public class XCATEntry {
 
     public XCATEntry(){}
 
-    public XCATEntry(String filePath, long offset, long size) {
-        this.filePath = filePath;
-        this.offset = offset;
-        this.size = size;
+    public XDATEntry getDATEntry() throws XFileDriverException {
+        return parent.readDATEntry(this);
     }
 
     @Override
@@ -27,15 +25,11 @@ public class XCATEntry {
         return "ENTRY: " + filePath + " " + size + " (" + offset + ")";
     }
 
-    public long getSize() throws XFileDriverException {
-        return size;
-    }
-
     public void setParent(XFile parent) {
         this.parent = parent;
     }
 
-    public void setFilePath(String filePath) {
+    public void setPath(String filePath) {
         this.filePath = filePath;
     }
 
@@ -51,11 +45,19 @@ public class XCATEntry {
         return parent;
     }
 
+    public String getPath() {
+        return filePath;
+    }
+
     public long getOffset() {
         return offset;
     }
 
-    public String getFilePath() {
-        return filePath;
+    public long getSize() throws XFileDriverException {
+        return size;
+    }
+
+    public int getParentId() {
+        return parent.id;
     }
 }

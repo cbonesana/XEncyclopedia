@@ -25,31 +25,45 @@ import static java.nio.file.StandardOpenOption.READ;
  */
 public class XFile {
 
+    /** All CAT/DAT archives have a numeric id. */
+    protected int id;
+
     protected String archiveName;
+
+    /** Path to the CAT file. */
     protected String positionCATName;
+    /** Path to the DAT file. */
     protected String positionDATName;
 
-    private File DATFile;
     private File CATFile;
+    private File DATFile;
 
+    /** List of all the entries of a CAT file. */
     protected List<XCATEntry> xCATEntryList = new ArrayList<>();
 
-    public XFile(String archiveName) throws XFileDriverException {
-        int dot   = archiveName.lastIndexOf('.');
-        int slash = archiveName.lastIndexOf('/');
+    /**
+     * Constructs a {@link org.dnacorp.xencyclopedia.extractor.files.XFile} from the given path to the archive
+     * @param archivePath the path to the CAT or DAT archive to analyze.
+     * @throws XFileDriverException if there is an {@link java.io.IOException}.
+     */
+    public XFile(String archivePath) throws XFileDriverException {
+        int dot   = archivePath.lastIndexOf('.');
+        int slash = archivePath.lastIndexOf('/');
 
         if (dot == -1)
-            dot = archiveName.length();
+            dot = archivePath.length();
         if (slash == -1)
             slash = 0;
 
-        if (archiveName.endsWith(".cat") || archiveName.endsWith(".dat"))
-            archiveName = archiveName.substring(0,dot);
-        this.positionCATName = archiveName + ".cat";
-        this.positionDATName = archiveName + ".dat";
+        if (archivePath.endsWith(".cat") || archivePath.endsWith(".dat"))
+            archivePath = archivePath.substring(0,dot);
+
+        this.id = Integer.parseInt(archivePath.substring(slash));
+        this.positionCATName = archivePath + ".cat";
+        this.positionDATName = archivePath + ".dat";
 
         // TODO: use the whole archive name or only a last part? Think about addon/01.cat for AP
-        this.archiveName = archiveName.substring(slash, dot);
+        this.archiveName = archivePath.substring(slash, dot);
 
         initFiles();
         try {
@@ -88,7 +102,7 @@ public class XFile {
         boolean first = true;
         int offset = 0;
         while ((c = cisr.read()) != -1){
-            if (c == 0)                         // skip zero charachers
+            if (c == 0)                         // skip zero characters
                 continue;
             if (c == 10 || c == 13) {           // read line each \n or \r
                 if (first) {                    // avoid first line
@@ -97,14 +111,14 @@ public class XFile {
                     continue;
                 }
                 String line = sb.toString();
-                int last = line.lastIndexOf(" ");
-                if (last == -1)
+                int space = line.lastIndexOf(" ");
+                if (space == -1)
                     throw new XFileDriverException("CAT file " + positionCATName + " contains invalid lines.", XFileDriverError.XFD_E_FILE_INVALID);
-                long entrySize = Long.parseLong(line.substring(last+1));
+                long entrySize = Long.parseLong(line.substring(space+1));
 
                 XCATEntry entry = new XCATEntry();    // create a new X2CATEntry
                 entry.setParent(this);
-                entry.setFilePath(line.substring(0,last));
+                entry.setPath(line.substring(0, space));
                 entry.setOffset(offset);
                 entry.setSize(entrySize);
                 xCATEntryList.add(entry);
@@ -121,10 +135,21 @@ public class XFile {
             throw new XFileDriverException("CAT entry list is empty.", XFileDriverError.XFD_E_FILE_EMPTY);
     }
 
+    /**
+     * @return A {@link java.util.List} of all the entries found in the CAT.
+     */
     public List<XCATEntry> getEntryList() {
         return xCATEntryList;
     }
 
+    /**
+     * Given a {@link org.dnacorp.xencyclopedia.extractor.files.XCATEntry} that is part of the archive, read the relative
+     * data from the DAT file and return them.
+     * @param entry a {@link org.dnacorp.xencyclopedia.extractor.files.XCATEntry} that is part of the archive.
+     * @return a {@link org.dnacorp.xencyclopedia.extractor.files.XDATEntry} with all the data relatives to the given
+     * {@link org.dnacorp.xencyclopedia.extractor.files.XCATEntry}.
+     * @throws XFileDriverException if there is an {@link java.io.IOException}.
+     */
     public XDATEntry readDATEntry(XCATEntry entry) throws XFileDriverException {
         if (entry.getParent() != this)
             throw new XFileDriverException("Entry " + entry + " doesn't belong to the entry list.", XFileDriverError.XFD_E_CAT_INVALIDFILENAME);
@@ -148,7 +173,7 @@ public class XFile {
                 throw new XFileDriverException("Decompression of an empty file.", XFileDriverError.XFD_E_FILE_EMPTY);
 
             XFDFlag flag = XFDFlag.FILETYPE_PLAIN;
-            if (entry.getFilePath().endsWith(".pck"))
+            if (entry.getPath().endsWith(".pck"))
                 flag = XFDFlag.FILETYPE_PCK;
             xDATEntry.setBuffer(decompressBuffer(byteBuffer, flag));
 
@@ -161,6 +186,13 @@ public class XFile {
         return xDATEntry;
     }
 
+    /**
+     * Decompress a {@link java.nio.ByteBuffer} from a DAT file given the type of compression with a {@link org.dnacorp.xencyclopedia.extractor.flags.XFDFlag}.
+     * @param data_in the data read from a DAT file.
+     * @param compressionMethod the {@link org.dnacorp.xencyclopedia.extractor.flags.XFDFlag} with the compression
+     * @return a {@link java.nio.ByteBuffer} with the decompressed data.
+     * @throws XFileDriverException if there is a {@link java.io.IOException} with the {@link java.util.zip.GZIPInputStream}.
+     */
     public static ByteBuffer decompressBuffer(ByteBuffer data_in, XFDFlag compressionMethod) throws XFileDriverException {
         byte[] decompressed = data_in.array();
         byte[] data;
@@ -219,5 +251,9 @@ public class XFile {
 
     public String getArchiveName() {
         return archiveName;
+    }
+
+    public int getId() {
+        return id;
     }
 }
