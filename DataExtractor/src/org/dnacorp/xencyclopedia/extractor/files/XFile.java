@@ -1,11 +1,10 @@
-package org.dnacorp.xencyclopedia.files;
+package org.dnacorp.xencyclopedia.extractor.files;
 
 import org.apache.commons.io.IOUtils;
-import org.dnacorp.xencyclopedia.extractor.XFDFlag;
-import org.dnacorp.xencyclopedia.extractor.cat.CATInputStreamReader;
-import org.dnacorp.xencyclopedia.extractor.cat.XCATEntry;
 import org.dnacorp.xencyclopedia.extractor.exception.XFileDriverError;
 import org.dnacorp.xencyclopedia.extractor.exception.XFileDriverException;
+import org.dnacorp.xencyclopedia.extractor.flags.XFDFlag;
+import org.dnacorp.xencyclopedia.extractor.utility.CATInputStreamReader;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -26,6 +25,7 @@ import static java.nio.file.StandardOpenOption.READ;
  */
 public class XFile {
 
+    protected String archiveName;
     protected String positionCATName;
     protected String positionDATName;
 
@@ -35,10 +35,21 @@ public class XFile {
     protected List<XCATEntry> xCATEntryList = new ArrayList<>();
 
     public XFile(String archiveName) throws XFileDriverException {
+        int dot   = archiveName.lastIndexOf('.');
+        int slash = archiveName.lastIndexOf('/');
+
+        if (dot == -1)
+            dot = archiveName.length();
+        if (slash == -1)
+            slash = 0;
+
         if (archiveName.endsWith(".cat") || archiveName.endsWith(".dat"))
-            archiveName = archiveName.substring(0,archiveName.indexOf("."));
+            archiveName = archiveName.substring(0,dot);
         this.positionCATName = archiveName + ".cat";
         this.positionDATName = archiveName + ".dat";
+
+        // TODO: use the whole archive name or only a last part? Think about addon/01.cat for AP
+        this.archiveName = archiveName.substring(slash, dot);
 
         initFiles();
         try {
@@ -204,5 +215,9 @@ public class XFile {
         for (byte b : data)
             System.out.print(String.format("%3x",b));
         System.out.println();
+    }
+
+    public String getArchiveName() {
+        return archiveName;
     }
 }

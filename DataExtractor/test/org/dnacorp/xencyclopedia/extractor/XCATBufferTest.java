@@ -1,9 +1,10 @@
 package org.dnacorp.xencyclopedia.extractor;
 
-import org.dnacorp.xencyclopedia.extractor.cat.XCATEntry;
+import org.dnacorp.xencyclopedia.extractor.files.XCATEntry;
 import org.dnacorp.xencyclopedia.extractor.exception.XFileDriverException;
-import org.dnacorp.xencyclopedia.files.XDATEntry;
-import org.dnacorp.xencyclopedia.files.XFile;
+import org.dnacorp.xencyclopedia.extractor.files.XDATEntry;
+import org.dnacorp.xencyclopedia.extractor.flags.XFDFlag;
+import org.dnacorp.xencyclopedia.extractor.files.XFile;
 
 import org.junit.After;
 import org.junit.Before;

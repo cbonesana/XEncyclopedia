@@ -1,4 +1,4 @@
-package org.dnacorp.xencyclopedia.extractor.utils;
+package org.dnacorp.xencyclopedia.extractor.utility;
 
 import java.io.*;
 

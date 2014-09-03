@@ -1,9 +1,6 @@
-package org.dnacorp.xencyclopedia.extractor.cat;
+package org.dnacorp.xencyclopedia.extractor.files;
 
-import org.dnacorp.xencyclopedia.extractor.FileBuffer;
-import org.dnacorp.xencyclopedia.extractor.exception.XFileDriverError;
 import org.dnacorp.xencyclopedia.extractor.exception.XFileDriverException;
-import org.dnacorp.xencyclopedia.files.XFile;
 
 /**
  * Created by Claudio "Dna" Bonesana
@@ -14,16 +11,10 @@ public class XCATEntry {
     protected XFile parent;
 
     protected String filePath;
-    protected long offset;
-    protected long size;
+    protected long offset = 0;
+    protected long size = 0;
 
-    protected FileBuffer buffer;
-
-    public XCATEntry(){
-        offset = 0;
-        size = 0;
-        buffer = null;
-    }
+    public XCATEntry(){}
 
     public XCATEntry(String filePath, long offset, long size) {
         this.filePath = filePath;
@@ -37,8 +28,6 @@ public class XCATEntry {
     }
 
     public long getSize() throws XFileDriverException {
-//        if (size > Integer.MAX_VALUE)
-//            throw new XFileDriverException("Entry " + filePath + " is too big (" + size + "byte)", XFileDriverError.XFD_E_CAT_INVALIDSIZE);
         return size;
     }
 
@@ -64,10 +53,6 @@ public class XCATEntry {
 
     public long getOffset() {
         return offset;
-    }
-
-    public FileBuffer getBuffer() {
-        return buffer;
     }
 
     public String getFilePath() {

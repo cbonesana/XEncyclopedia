@@ -1,10 +1,7 @@
-package org.dnacorp.xencyclopedia.extractor.cat;
-
-import org.dnacorp.xencyclopedia.extractor.utils.DecryptedInputStreamReader;
+package org.dnacorp.xencyclopedia.extractor.utility;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 
 /**
  * Created by Claudio "Dna" Bonesana

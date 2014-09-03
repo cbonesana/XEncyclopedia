@@ -1,6 +1,4 @@
-package org.dnacorp.xencyclopedia.files;
-
-import org.dnacorp.xencyclopedia.extractor.cat.XCATEntry;
+package org.dnacorp.xencyclopedia.extractor.files;
 
 import java.nio.ByteBuffer;
 
