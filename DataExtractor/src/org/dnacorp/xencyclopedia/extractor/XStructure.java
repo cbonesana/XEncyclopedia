@@ -1,13 +1,15 @@
 package org.dnacorp.xencyclopedia.extractor;
 
+import org.dnacorp.xencyclopedia.extractor.exception.XFileDriverError;
+import org.dnacorp.xencyclopedia.extractor.exception.XFileDriverException;
 import org.dnacorp.xencyclopedia.extractor.files.XCATEntry;
 import org.dnacorp.xencyclopedia.extractor.files.XFile;
-import org.dnacorp.xencyclopedia.extractor.utility.XPath;
 
-import java.util.ArrayList;
+import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * Created by Claudio "Dna" Bonesana
@@ -18,7 +20,7 @@ public class XStructure {
     /** The key is the path to the archive, the value is the archive. */
     private Map<String, XFile> archives = new HashMap<>();
     /** The key is the path to the file inside a CAT, the value is the relative entry. */
-    private Map<String, XCATEntry> entriesStructure = new HashMap<>();
+    private SortedMap<String, XCATEntry> entriesStructure = new TreeMap<>();
 
     /**
      * Add all the entries in the given {@link org.dnacorp.xencyclopedia.extractor.files.XFile} to the current structure.
@@ -42,11 +44,41 @@ public class XStructure {
     }
 
     /**
+     * Reads the whole directory of a game and searches for the CAT files.
+     * @param directory the path to the directory.
+     * @throws XFileDriverException if the path is not a valid directory.
+     */
+    public void addFolder(String directory) throws XFileDriverException {
+        File folder = new File(directory);
+
+        if (!folder.isDirectory())
+            throw new XFileDriverException("The path " + directory + " is not a valid directory.", XFileDriverError.XFD_E_FILE_ACCESS);
+
+        if (folder.listFiles() != null) {
+            for (File fileEntry : folder.listFiles()) {
+                if (fileEntry.getAbsolutePath().endsWith(".cat")) {
+                    XFile archive = new XFile(fileEntry.getAbsolutePath());
+                    addArchive(archive);
+                }
+            }
+        }
+    }
+
+    /**
      * Given a path to a file inside a CAT, get the relative {@link org.dnacorp.xencyclopedia.extractor.files.XCATEntry}.
      * @param path the path inside the CAT.
      * @return the relative entry.
      */
     public XCATEntry getArchiveEntry(String path) {
         return entriesStructure.get(path);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (XCATEntry entry: entriesStructure.values())
+            sb.append(entry.toString()).append("\n");
+
+        return sb.toString();
     }
 }

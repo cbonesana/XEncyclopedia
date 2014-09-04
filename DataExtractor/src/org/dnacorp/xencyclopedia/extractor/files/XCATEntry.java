@@ -22,7 +22,7 @@ public class XCATEntry {
 
     @Override
     public String toString() {
-        return "ENTRY: " + filePath + " " + size + " (" + offset + ")";
+        return String.format("%02d", parent.id) + ": " + filePath + " " + size + " (" + offset + ")";
     }
 
     public void setParent(XFile parent) {

@@ -48,7 +48,7 @@ public class XFile {
      */
     public XFile(String archivePath) throws XFileDriverException {
         int dot   = archivePath.lastIndexOf('.');
-        int slash = archivePath.lastIndexOf('/');
+        int slash = archivePath.lastIndexOf(File.separator);
 
         if (dot == -1)
             dot = archivePath.length();
@@ -58,7 +58,7 @@ public class XFile {
         if (archivePath.endsWith(".cat") || archivePath.endsWith(".dat"))
             archivePath = archivePath.substring(0,dot);
 
-        this.id = Integer.parseInt(archivePath.substring(slash));
+        this.id = Integer.parseInt(archivePath.substring(slash+1));
         this.positionCATName = archivePath + ".cat";
         this.positionDATName = archivePath + ".dat";
 
