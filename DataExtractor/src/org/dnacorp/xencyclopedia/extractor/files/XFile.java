@@ -197,16 +197,16 @@ public class XFile {
         byte[] decompressed = data_in.array();
         byte[] data;
 
-        if (compressionMethod == XFDFlag.FILETYPE_PCK){
+//        if (compressionMethod == XFDFlag.FILETYPE_PCK){
             data = new byte[decompressed.length];
             System.out.print(String.format("%24s", " "));
             for(int i=0; i<decompressed.length; i++) {
                 data[i] = (byte) ((int)decompressed[i] ^ 0x33);
                 System.out.print(String.format("%3x", data[i]));
             }
-        } else {
-            data = decompressed;
-        }
+//        } else {
+//            data = decompressed;
+//        }
 
         try {
             GZIPInputStream gZis = new GZIPInputStream(new ByteArrayInputStream(data));

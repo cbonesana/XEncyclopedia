@@ -23,10 +23,12 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="data-extractor" />
+        <module name="ObjectViewer" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="data-extractor" target="1.7" />
+      <module name="ObjectViewer" target="1.7" />
     </bytecodeTargetLevel>
   </component>
 </project>

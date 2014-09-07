@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/data-extractor.iml" filepath="$PROJECT_DIR$/data-extractor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../ObjectViewer/object-viewer.iml" filepath="$PROJECT_DIR$/../ObjectViewer/object-viewer.iml" />
     </modules>
   </component>
 </project>
