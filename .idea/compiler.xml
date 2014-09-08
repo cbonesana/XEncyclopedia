@@ -22,11 +22,14 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
+        <module name="bob-converter" />
+        <module name="BOBConverter" />
         <module name="data-extractor" />
         <module name="object-viewer" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="bob-converter" target="1.7" />
       <module name="data-extractor" target="1.7" />
       <module name="object-viewer" target="1.7" />
     </bytecodeTargetLevel>

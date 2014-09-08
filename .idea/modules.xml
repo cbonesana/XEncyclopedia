@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/XEncyclopedia.iml" filepath="$PROJECT_DIR$/.idea/XEncyclopedia.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BOBConverter/bob-converter.iml" filepath="$PROJECT_DIR$/BOBConverter/bob-converter.iml" />
       <module fileurl="file://$PROJECT_DIR$/DataExtractor/data-extractor.iml" filepath="$PROJECT_DIR$/DataExtractor/data-extractor.iml" />
       <module fileurl="file://$PROJECT_DIR$/ObjectViewer/object-viewer.iml" filepath="$PROJECT_DIR$/ObjectViewer/object-viewer.iml" />
     </modules>

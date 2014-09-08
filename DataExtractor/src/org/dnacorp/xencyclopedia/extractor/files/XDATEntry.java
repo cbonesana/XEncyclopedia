@@ -23,4 +23,7 @@ public class XDATEntry {
         return buffer;
     }
 
+    public void convertToBOD() {
+
+    }
 }
