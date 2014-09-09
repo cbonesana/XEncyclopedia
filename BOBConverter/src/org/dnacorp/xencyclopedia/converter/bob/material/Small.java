@@ -6,19 +6,26 @@ import java.io.IOException;
 
 /**
  * Created by Claudio "Dna" Bonesana
- * Date: 08.09.2014 21:45.
+ * Date: 09.09.2014 18:12.
  */
-public class BOBMaterial1 extends BOBMaterial {
+public class Small {
 
-    public short textureID = 0;
-
+    public String textureFile = null;
     public RGB ambient;
     public RGB diffuse;
     public RGB specular;
-
-    public BOBMaterial1() {
-        type = MaterialType.mat1;
-    }
+    public int transparency = 0;
+    public short selfIllumination = 0;
+    public Pair shininess;
+    public boolean destinationBlend = false;
+    public boolean twoSided = false;
+    public boolean wireframe = false;
+    public short textureValue;
+    public PairTexture enviromentMap;
+    public PairTexture bumpMap;
+    public PairTexture lightMap;
+    public PairTexture map4;
+    public PairTexture map5;
 
     public void load(FileInputStream fis) throws IOException {
         // TODO
@@ -31,4 +38,5 @@ public class BOBMaterial1 extends BOBMaterial {
     public void toPlainFile(FileOutputStream fos) throws IOException {
         // TODO
     }
+
 }

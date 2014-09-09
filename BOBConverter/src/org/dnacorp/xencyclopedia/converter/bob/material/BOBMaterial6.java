@@ -6,18 +6,16 @@ import java.io.IOException;
 
 /**
  * Created by Claudio "Dna" Bonesana
- * Date: 08.09.2014 21:45.
+ * Date: 09.09.2014 18:10.
  */
-public class BOBMaterial1 extends BOBMaterial {
+public class BOBMaterial6 extends BOBMaterial {
 
-    public short textureID = 0;
+    public int flags   = 0;
+    public Small small = null;
+    public Big big     = null;
 
-    public RGB ambient;
-    public RGB diffuse;
-    public RGB specular;
-
-    public BOBMaterial1() {
-        type = MaterialType.mat1;
+    public BOBMaterial6() {
+        type = MaterialType.mat6;
     }
 
     public void load(FileInputStream fis) throws IOException {
