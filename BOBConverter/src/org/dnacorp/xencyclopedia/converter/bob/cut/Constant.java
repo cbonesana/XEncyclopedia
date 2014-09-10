@@ -1,17 +1,16 @@
-package org.dnacorp.xencyclopedia.converter.bob.material;
+package org.dnacorp.xencyclopedia.converter.bob.cut;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 /**
  * Created by Claudio "Dna" Bonesana
- * Date: 09.09.2014 17:54.
+ * Date: 10.09.2014 22:10.
  */
-public class RGB {
+public class Constant {
 
-    public short r = 0;
-    public short g = 0;
-    public short b = 0;
+    public int a = 0;
+    public double b = 0.0;
 
     public void load(FileInputStream fis) {
         // TODO
@@ -24,5 +23,4 @@ public class RGB {
     public void toTextFile(FileOutputStream fos) {
         // TODO
     }
-
 }

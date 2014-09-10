@@ -1,17 +1,18 @@
-package org.dnacorp.xencyclopedia.converter.bob.material;
+package org.dnacorp.xencyclopedia.converter.bob.frame;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 /**
  * Created by Claudio "Dna" Bonesana
- * Date: 09.09.2014 17:54.
+ * Date: 10.09.2014 22:00.
  */
-public class RGB {
+public class AngleAxis {
 
-    public short r = 0;
-    public short g = 0;
-    public short b = 0;
+    public double angle = 0;
+    public double x = 0;
+    public double y = 0;
+    public double z = 0;
 
     public void load(FileInputStream fis) {
         // TODO
@@ -24,5 +25,4 @@ public class RGB {
     public void toTextFile(FileOutputStream fos) {
         // TODO
     }
-
 }

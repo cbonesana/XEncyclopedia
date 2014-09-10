@@ -15,4 +15,5 @@ public class Position3D extends Vertex {
     public Position3D(Point3DInteger pt) {
         super(pt);
     }
+
 }

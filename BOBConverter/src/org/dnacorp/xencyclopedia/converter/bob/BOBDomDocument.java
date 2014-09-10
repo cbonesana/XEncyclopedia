@@ -1,5 +1,7 @@
 package org.dnacorp.xencyclopedia.converter.bob;
 
+import org.dnacorp.xencyclopedia.converter.bob.cut.BOBDomCUT;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 

@@ -1,5 +1,10 @@
 package org.dnacorp.xencyclopedia.converter.bob.geometry;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+
 /**
  * Created by Claudio "Dna" Bonesana
  * Date: 09.09.2014 18:21.
@@ -156,6 +161,27 @@ public class Point3DInteger {
 
     public Point3DInteger cross(Point3DInteger b) {
         return new Point3DInteger(y * b.z - z * b.y, z * b.x - x * b.z, x * b.y - y * b.x);
+    }
+
+    public void load(DataInputStream dis) throws IOException {
+        x = dis.readInt();
+        y = dis.readInt();
+        z = dis.readInt();
+    }
+
+    public void toBinaryFile(DataOutputStream dos) throws IOException {
+        dos.writeInt(x);
+        dos.writeInt(y);
+        dos.writeInt(z);
+    }
+
+    public void toTextFile(DataOutputStream dos) throws IOException {
+        dos.writeInt(x);
+        dos.writeChar(' ');
+        dos.writeInt(y);
+        dos.writeChar(' ');
+        dos.writeInt(z);
+        dos.writeChar(' ');
     }
 
 }

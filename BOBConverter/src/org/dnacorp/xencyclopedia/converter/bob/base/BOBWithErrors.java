@@ -21,7 +21,7 @@ public class BOBWithErrors {
         // TODO
     }
 
-    protected void error(BOBErrorSeverity severity, BOBErrorCodes code, String format, VAList ap) {
+    protected void error(BOBErrorSeverity severity, BOBErrorCodes code, String format, Object ... ap) {
         // TODO
     }
 }

@@ -1,5 +1,9 @@
 package org.dnacorp.xencyclopedia.converter.bob.geometry;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 /**
  * Created by Claudio "Dna" Bonesana
  * Date: 09.09.2014 19:07.
@@ -133,6 +137,23 @@ public class Point2DDouble {
 
     public Point2DDouble normalize() {
         return this.divide(length());
+    }
+
+    public void load(DataInputStream dis) throws IOException {
+        x = dis.readDouble();
+        y = dis.readDouble();
+    }
+
+    public void toBinaryFile(DataOutputStream dos) throws IOException {
+        dos.writeDouble(x);
+        dos.writeDouble(y);
+    }
+
+    public void toTextFile(DataOutputStream dos) throws IOException {
+        dos.writeDouble(x);
+        dos.writeChar(' ');
+        dos.writeDouble(y);
+        dos.writeChar(' ');
     }
 
 }
