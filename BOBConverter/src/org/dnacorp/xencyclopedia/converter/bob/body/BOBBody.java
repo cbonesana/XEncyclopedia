@@ -20,7 +20,7 @@ public class BOBBody {
     public BOBParts parts;
     public BOBWeights weights;
 
-    public int bodySize = 0;
+    public int bodySize  = 0;
     public int bodyFlags = 0;
 
     public void load(FileInputStream fis) throws IOException {
