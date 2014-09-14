@@ -20,15 +20,18 @@ public class BOBBodies extends BOBSection {
 
     public List<BOBBody> bodyList = new ArrayList<>();
 
-    public void load(DataInputStream dis) throws IOException {
+    public boolean load(DataInputStream dis) throws IOException {
         // TODO
+        return false;
     }
 
-    public void toBinaryFile(DataOutputStream dos) throws IOException {
+    public boolean toBinaryFile(DataOutputStream dos) throws IOException {
         // TODO
+        return false;
     }
 
-    public void toTextFile(DataOutputStream dos, Settings settings, BOBMaterials materials) throws IOException {
+    public boolean toTextFile(DataOutputStream dos, Settings settings, BOBMaterials materials) throws IOException {
         // TODO
+        return false;
     }
 }

@@ -1,7 +1,9 @@
 package org.dnacorp.xencyclopedia.converter.bob.material;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import org.dnacorp.xencyclopedia.converter.bob.base.BOBErrorCodes;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +14,17 @@ import java.util.List;
  */
 public class Material6Value {
 
-    private static List<String> m_stringTypes = new ArrayList<>();
+    private static String[] m_stringTypes = {
+            "SPTYPE_LONG",
+            "SPTYPE_BOOL",
+            "SPTYPE_FLOAT",
+            "",
+            "",
+            "SPTYPE_FLOAT4",
+            "",
+            "",
+            "SPTYPE_STRING"
+    };
 
     public enum Type {
         typeLong(0),
@@ -43,7 +55,7 @@ public class Material6Value {
     }
 
     public static String typeName(int type) {
-        return type < m_stringTypes.size() ? m_stringTypes.get(type) : "";
+        return type < m_stringTypes.length ? m_stringTypes[type] : "";
     }
 
     public String typeName() {
@@ -51,18 +63,52 @@ public class Material6Value {
     }
 
     public static int typeNameCount() {
-        return m_stringTypes.size();
+        return m_stringTypes.length;
     }
 
-    public void load(DataInputStream dis) throws IOException {
-        // TODO
+    public BOBErrorCodes load(DataInputStream dis) throws IOException {
+        name = dis.readUTF();
+        short t = dis.readShort();
+        type = Type.values()[t];
+
+        switch (type){
+            case typeBool:
+            case typeLong: val.i = dis.readInt(); break;
+            case typeFloat: val.f = dis.readFloat(); break;
+            case typeFloat4: val.f4.load(dis); break;
+            case typeString: val.psz = dis.readUTF();
+            default: return BOBErrorCodes.e_unkMaterialValueType;
+        }
+
+        return BOBErrorCodes.e_noError;
     }
 
-    public void toBinaryFile(DataOutputStream dos) throws IOException {
-        // TODO
+    public boolean toBinaryFile(DataOutputStream dos) throws IOException {
+        dos.writeChars(name);
+
+        switch (type) {
+            case typeBool:
+            case typeLong: dos.write(val.i); break;
+            case typeFloat: dos.writeFloat(val.f); break;
+            case typeFloat4: val.f4.toBinaryFile(dos); break;
+            case typeString: dos.writeChars(val.psz); break;
+            default: return false;
+        }
+        return true;
     }
 
-    public void toTextFile(DataOutputStream dos) throws IOException {
-        // TODO
+    public boolean toTextFile(DataOutputStream dos) throws IOException {
+        dos.writeChars(" " + name + ";" + typeName() + ";");
+
+        switch (type) {
+            case typeBool:
+            case typeLong: dos.write(val.i); dos.writeChar(';'); break;
+            case typeFloat: dos.writeFloat(val.f); dos.writeChar(';'); break;
+            case typeFloat4: val.f4.toTextFile(dos); dos.writeChar(';'); break;
+            case typeString: dos.writeChars(val.psz); dos.writeChar(';'); break;
+            default: return false;
+        }
+        dos.writeChar(' ');
+        return true;
     }
 }

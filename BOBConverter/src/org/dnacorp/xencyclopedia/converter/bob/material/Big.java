@@ -1,8 +1,8 @@
 package org.dnacorp.xencyclopedia.converter.bob.material;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import org.dnacorp.xencyclopedia.converter.bob.base.BOBErrorCodes;
+
+import java.io.*;
 
 /**
  * Created by Claudio "Dna" Bonesana
@@ -17,15 +17,23 @@ public class Big {
 
     public BOBMaterial6Values values;
 
-    public void load(DataInputStream dis) throws IOException {
-        // TODO
+    public BOBErrorCodes load(DataInputStream dis) throws IOException {
+        technique = dis.readShort();
+        return values.load(dis);
     }
 
-    public void toBinaryFile(DataOutputStream dos) throws IOException {
-        // TODO
+    public boolean toBinaryFile(DataOutputStream dos) throws IOException {
+        dos.write(technique);
+        dos.writeChars(effect);
+        values.toBinaryFile(dos);
+        return true;
     }
 
-    public void toTextFile(DataOutputStream dos) throws IOException {
-        // TODO
+    public boolean toTextFile(DataOutputStream dos) throws IOException {
+        dos.write(technique);
+        dos.writeChar(';');
+        dos.writeChars(effect);
+        values.toTextFile(dos);
+        return true;
     }
 }

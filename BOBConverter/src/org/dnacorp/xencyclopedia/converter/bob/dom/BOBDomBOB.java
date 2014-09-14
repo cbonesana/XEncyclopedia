@@ -4,7 +4,10 @@ import org.dnacorp.xencyclopedia.converter.bob.BOBInfo;
 import org.dnacorp.xencyclopedia.converter.bob.BOBNames;
 import org.dnacorp.xencyclopedia.converter.bob.BOBSection;
 import org.dnacorp.xencyclopedia.converter.bob.Settings;
+import org.dnacorp.xencyclopedia.converter.bob.base.BOBError;
+import org.dnacorp.xencyclopedia.converter.bob.base.BOBErrorCodes;
 import org.dnacorp.xencyclopedia.converter.bob.body.BOBBodies;
+import org.dnacorp.xencyclopedia.converter.bob.material.BOBMaterial;
 import org.dnacorp.xencyclopedia.converter.bob.material.BOBMaterials;
 
 import java.io.*;
@@ -29,17 +32,60 @@ public class BOBDomBOB extends BOBSection {
     }
 
     public boolean load(DataInputStream dis) throws IOException {
-        // TODO
-        return false;
+        int hdr = dis.readInt();
+        if (hdr != HDR_BEGIN) {
+            error(BOBErrorCodes.e_badHeader);
+            return false;
+        }
+
+        if (peek(dis) == BOBInfo.HDR_BEGIN) {
+            if (!info.load(dis)) {
+                for (BOBError it : errors)
+                    error(it.code, "info: %s", it.text);
+                return false;
+            }
+        }
+
+        if (!materials.load(dis)) {
+            for (BOBError it : errors)
+                error(it.code, "materials->%s", it.text);
+            return false;
+        }
+
+        if (!bodies.load(dis)) {
+            for (BOBError it : errors)
+                error(it.code, "bodies->%s", it.text);
+            return false;
+        }
+
+        hdr = dis.readInt();
+
+        if (hdr != HDR_END)
+            error(BOBErrorCodes.e_badEndHeader);
+
+        return hdr==HDR_END;
     }
 
     public boolean toBinaryFile(DataOutputStream dos) throws IOException {
-        // TODO
-        return false;
+        dos.write(HDR_BEGIN);
+        info.toBinaryFile(dos);
+        materials.toBinaryFile(dos);
+        bodies.toBinaryFile(dos);
+        dos.write(HDR_END);
+        return true;
     }
 
     public boolean toTextFile(DataOutputStream dos) throws IOException {
-        // TODO
-        return false;
+        info.toTextFile(dos);
+        dos.writeChars("\n");
+        materials.toTextFile(dos);
+        if (materials.size() > 0)
+            dos.writeChars("\n");
+        if (!bodies.toTextFile(dos, m_settings, materials)) {
+            for (BOBError it : errors)
+                error(it.severity, it.code, "Bodies: %s", it.text);
+            return false;
+        }
+        return true;
     }
 }

@@ -28,8 +28,8 @@ public class BOBErrorStrings {
     };
 
     public static String bobTranslateError(BOBErrorCodes code) {
-        if (code.ordinal() >= 0 && code.ordinal() < bobErrors.length)
-            return bobErrors[code.ordinal()];
-        return bobErrors[BOBErrorCodes.e_error.ordinal()];
+        if (code.value() >= 0 && code.value() < bobErrors.length)
+            return bobErrors[code.value()];
+        return bobErrors[BOBErrorCodes.e_error.value()];
     }
 }

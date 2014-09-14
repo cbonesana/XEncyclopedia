@@ -1,8 +1,8 @@
 package org.dnacorp.xencyclopedia.converter.bob.material;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import org.dnacorp.xencyclopedia.converter.bob.base.BOBErrorCodes;
+
+import java.io.*;
 
 /**
  * Created by Claudio "Dna" Bonesana
@@ -27,16 +27,62 @@ public class Small {
     public PairTexture map4;
     public PairTexture map5;
 
-    public void load(DataInputStream dis) throws IOException {
-        // TODO
+    public BOBErrorCodes load(DataInputStream dis, int flags) throws IOException {
+        textureFile = dis.readUTF();
+        ambient.load(dis);
+        diffuse.load(dis);
+        specular.load(dis);
+        transparency = dis.read();
+        selfIllumination = dis.readShort();
+        shininess.load(dis);
+
+        short s = (short)flags;
+        destinationBlend = (s & 0x2) > 0;
+        twoSided = (s & 0x10) > 0;
+        wireframe = (s & 0x8) > 0;
+
+        textureValue = dis.readShort();
+        enviromentMap.load(dis);
+        bumpMap.load(dis);
+        lightMap.load(dis);
+        map4.load(dis);
+        map5.load(dis);
+
+        return BOBErrorCodes.e_noError;
     }
 
-    public void toBinaryFile(DataOutputStream dos) throws IOException {
-        // TODO
+    public boolean toBinaryFile(DataOutputStream dos) throws IOException {
+        dos.writeChars((textureFile == null ? "" : textureFile));
+        ambient.toBinaryFile(dos);
+        diffuse.toBinaryFile(dos);
+        specular.toBinaryFile(dos);
+        dos.write(transparency);
+        dos.write(selfIllumination);
+        shininess.toBinaryFile(dos);
+        dos.writeShort(textureValue);
+        enviromentMap.toBinaryFile(dos);
+        bumpMap.toBinaryFile(dos);
+        lightMap.toBinaryFile(dos);
+        map4.toBinaryFile(dos);
+        map5.toBinaryFile(dos);
+
+        return true;
     }
 
     public void toTextFile(DataOutputStream dos) throws IOException {
-        // TODO
+        dos.writeChars((textureFile == null ? "NULL" : textureFile)); dos.writeChar(';');
+        ambient.toTextFile(dos); dos.writeChar(';');
+        diffuse.toTextFile(dos); dos.writeChar(';');
+        specular.toTextFile(dos); dos.writeChar(';');
+        dos.write(transparency); dos.writeChar(';');
+        dos.write(selfIllumination); dos.writeChar(';');
+        shininess.toTextFile(dos); dos.writeChar(';');
+        dos.writeShort(textureValue); dos.writeChar(';');
+        enviromentMap.toTextFile(dos); dos.writeChar(';');
+        bumpMap.toTextFile(dos); dos.writeChar(';');
+        lightMap.toTextFile(dos); dos.writeChar(';');
+        map4.toTextFile(dos); dos.writeChar(';');
+        map5.toTextFile(dos); dos.writeChar(';');
     }
 
 }

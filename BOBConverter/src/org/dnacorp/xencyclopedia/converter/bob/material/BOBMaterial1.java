@@ -1,7 +1,7 @@
 package org.dnacorp.xencyclopedia.converter.bob.material;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
@@ -20,15 +20,36 @@ public class BOBMaterial1 extends BOBMaterial {
         type = MaterialType.mat1;
     }
 
-    public void load(DataInputStream dis) throws IOException {
-        // TODO
+    public boolean load(DataInputStream dis) throws IOException {
+        index = dis.readShort();
+        textureID = dis.readShort();
+        ambient.load(dis);
+        diffuse.load(dis);
+        specular.load(dis);
+
+        // TODO: check for errorCode=is.fail() ? e_notEnoughData : e_noError;
+        return false;
     }
 
     public void toBinaryFile(DataOutputStream dos) throws IOException {
-        // TODO
+        dos.write(index);
+        dos.write(textureID);
+        ambient.toBinaryFile(dos);
+        diffuse.toBinaryFile(dos);
+        specular.toBinaryFile(dos);
     }
 
     public void toTextFile(DataOutputStream dos) throws IOException {
-        // TODO
+        dos.writeChars("MATERIAL");
+        switch (type) {
+            case mat3: dos.writeChar('3'); break;
+            case mat5: dos.writeChar('5'); break;
+        }
+        dos.writeChars(": ");
+        dos.write(index);
+        dos.write(textureID);
+        ambient.toTextFile(dos);
+        diffuse.toTextFile(dos);
+        specular.toTextFile(dos);
     }
 }

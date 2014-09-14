@@ -20,29 +20,29 @@ public class Error {
         this.s = s;
         this.e = e;
 
-        code = s.ordinal() << 24;
-        code |= f.ordinal() << 16;
-        code |= e.ordinal();
+        code = s.value() << 24;
+        code |= f.value() << 16;
+        code |= e.value();
     }
 
     public int severity() {
-        return s.ordinal();
+        return s.value();
     }
 
     public int facility() {
-        return f.ordinal();
+        return f.value();
     }
 
     public boolean failed() {
-        return (severity() & BOBErrorSeverity.s_error.ordinal()) > 0;
+        return (severity() & BOBErrorSeverity.s_error.value()) > 0;
     }
 
     public boolean warning() {
-        return (severity() & ErrorSeverity.S_Warning.ordinal()) > 0;
+        return (severity() & ErrorSeverity.S_Warning.value()) > 0;
     }
 
     public boolean succeeded() {
-        return (severity() & ErrorSeverity.S_OK.ordinal()) == 0;
+        return (severity() & ErrorSeverity.S_OK.value()) == 0;
     }
 
     public int getCode() {

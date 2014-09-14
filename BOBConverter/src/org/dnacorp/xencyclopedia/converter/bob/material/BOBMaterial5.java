@@ -1,8 +1,6 @@
 package org.dnacorp.xencyclopedia.converter.bob.material;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * Created by Claudio "Dna" Bonesana
@@ -16,15 +14,26 @@ public class BOBMaterial5 extends BOBMaterial3{
         type = MaterialType.mat5;
     }
 
-    public void load(DataInputStream dis) throws IOException {
-        // TODO
+    public boolean load(DataInputStream dis) throws IOException {
+        super.load(dis);
+        if (type.value() >  MaterialType.mat3.value())
+            lightMap.load(dis);
+
+        // TODO: check for errorCode=is.fail() ? e_notEnoughData : e_noError;
+        return false;
     }
 
     public void toBinaryFile(DataOutputStream dos) throws IOException {
-        // TODO
+        super.toBinaryFile(dos);
+        if (type.value() >  MaterialType.mat3.value())
+            lightMap.toBinaryFile(dos);
     }
 
     public void toTextFile(DataOutputStream dos) throws IOException {
-        // TODO
+        super.toBinaryFile(dos);
+        if (type.value() >  MaterialType.mat3.value()) {
+            dos.writeChar(';');
+            lightMap.toBinaryFile(dos);
+        }
     }
 }
