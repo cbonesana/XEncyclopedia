@@ -1,8 +1,6 @@
 package org.dnacorp.xencyclopedia.converter.bob;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 
 /**
@@ -16,15 +14,15 @@ public class BOBBones extends BOBSection {
 
     public List<String> boneList;
 
-    public void load(FileInputStream fis) throws IOException {
+    public void load(DataInputStream dis) throws IOException {
         // TODO
     }
 
-    public void toBinaryFile(FileOutputStream fos) throws IOException {
+    public void toBinaryFile(DataOutputStream dos) throws IOException {
         // TODO
     }
 
-    public void toPlainFile(FileOutputStream fos) throws IOException {
+    public void toTextFile(DataOutputStream dos) throws IOException {
         // TODO
     }
 }

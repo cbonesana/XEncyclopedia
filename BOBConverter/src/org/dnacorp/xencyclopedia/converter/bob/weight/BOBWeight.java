@@ -18,7 +18,7 @@ public class BOBWeight {
             values.add(v);
     }
 
-    public void load(FileInputStream fis) throws IOException {
+    public void load(DataInputStream dis) throws IOException {
         DataInputStream dis = new DataInputStream(fis);
         short count = dis.readShort();
 
@@ -30,7 +30,7 @@ public class BOBWeight {
         }
     }
 
-    public void toBinaryFile(FileOutputStream fos) throws IOException {
+    public void toBinaryFile(DataOutputStream dos) throws IOException {
         DataOutputStream dos = new DataOutputStream(fos);
         dos.write((short)values.size());
 
@@ -40,7 +40,7 @@ public class BOBWeight {
         }
     }
 
-    public void toPlainFile(FileOutputStream fos, int index) throws IOException {
+    public void toTextFile(DataOutputStream dos, int index) throws IOException {
         // TODO
     }
 }

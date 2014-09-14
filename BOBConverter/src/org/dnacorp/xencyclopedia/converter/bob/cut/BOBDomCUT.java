@@ -5,6 +5,8 @@ import org.dnacorp.xencyclopedia.converter.bob.BOBNames;
 import org.dnacorp.xencyclopedia.converter.bob.BOBSection;
 import org.dnacorp.xencyclopedia.converter.bob.Settings;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -32,16 +34,19 @@ public class BOBDomCUT extends BOBSection {
         this.m_settings = settings;
     }
 
-    public void load(FileInputStream fis) {
+    public boolean load(DataInputStream dis) {
         // TODO
+        return false;
     }
 
-    public void toBinaryFile(FileOutputStream fos) {
+    public boolean toBinaryFile(DataOutputStream dos) {
         // TODO
+        return false;
     }
 
-    public void toTextFile(FileOutputStream fos) {
+    public boolean toTextFile(DataOutputStream dos) {
         // TODO
+        return false;
     }
 
     public BOBPath createChild() {
@@ -50,8 +55,9 @@ public class BOBDomCUT extends BOBSection {
         return ch;
     }
 
-    public void convert(FileInputStream is, FileOutputStream fos) {
+    public boolean convert(DataInputStream dis, DataOutputStream dos) {
         // TODO
+        return false;
     }
 
 }

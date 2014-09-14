@@ -15,15 +15,15 @@ public class BOBNote {
     public String text;
     public BOBErrorCodes errorCode = BOBErrorCodes.e_noError;
 
-    public void load(FileInputStream fis) {
+    public void load(DataInputStream dis) {
         // TODO
     }
 
-    public void toBinaryFile(FileOutputStream fos) {
+    public void toBinaryFile(DataOutputStream dos) {
         // TODO
     }
 
-    public void toTextFile(FileOutputStream fos) {
+    public void toTextFile(DataOutputStream dos) {
         // TODO
     }
 

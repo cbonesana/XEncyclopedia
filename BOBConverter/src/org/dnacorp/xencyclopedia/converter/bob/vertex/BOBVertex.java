@@ -31,15 +31,15 @@ public class BOBVertex extends Vertex {
         return (flags & FLAG_UV) > 0;
     }
 
-    public void load(FileInputStream fis) throws IOException {
+    public void load(DataInputStream dis) throws IOException {
         // TODO
     }
 
-    public void toBinaryFile(FileOutputStream fos) throws IOException {
+    public void toBinaryFile(DataOutputStream dos) throws IOException {
         // TODO
     }
 
-    public void toPlainFile(FileOutputStream fos) throws IOException {
+    public void toTextFile(DataOutputStream dos) throws IOException {
         // TODO
     }
 

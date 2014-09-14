@@ -14,11 +14,11 @@ public class BOBX3VertexDataRecord {
     public Vector tangent;
     public Vector unk;
 
-    public void load(FileInputStream fis) throws IOException {
+    public void load(DataInputStream dis) throws IOException {
         // TODO
     }
 
-    public void toFile(FileOutputStream fos) throws IOException {
+    public void toFile(DataOutputStream dos) throws IOException {
         // TODO
     }
 

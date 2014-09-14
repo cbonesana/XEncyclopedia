@@ -24,23 +24,23 @@ public class BOBPart extends ArrayList<BOBFaceList> {
     public int flags = 0;
     public BOBPartCollisionBox collisionBox;
 
-    private void outputX3VertexData(FileOutputStream fos, BOBPointMap pointMap) {
+    private void outputX3VertexData(DataOutputStream dos, BOBPointMap pointMap) {
         // TODO
     }
 
-    private void outputExtraPtInfo(FileOutputStream fos, BOBVertex[] points) {
+    private void outputExtraPtInfo(DataOutputStream dos, BOBVertex[] points) {
         // TODO
     }
 
-    private void outputNormals(FileOutputStream fos, BOBVertex[] points) {
+    private void outputNormals(DataOutputStream dos, BOBVertex[] points) {
         // TODO
     }
 
-    private void outputRaw(FileOutputStream fos, BOBPointMap pointMap, int idx) {
+    private void outputRaw(DataOutputStream dos, BOBPointMap pointMap, int idx) {
         // TODO
     }
 
-    private void outputBOD(FileOutputStream fos, Settings settings, BOBMaterials materials, BOBPointMap pointMap, int idx) {
+    private void outputBOD(DataOutputStream dos, Settings settings, BOBMaterials materials, BOBPointMap pointMap, int idx) {
         // TODO
     }
 
@@ -79,15 +79,15 @@ public class BOBPart extends ArrayList<BOBFaceList> {
         return p;
     }
 
-    public void load(FileInputStream fis) throws IOException {
+    public void load(DataInputStream dis) throws IOException {
         // TODO
     }
 
-    public void toBinaryFile(FileOutputStream fos, BOBVertices vertices) throws IOException {
+    public void toBinaryFile(DataOutputStream dos, BOBVertices vertices) throws IOException {
         // TODO
     }
 
-    public void toTextFile(FileOutputStream fos, Settings settings, BOBMaterials materials, BOBPointMap pointMap, int idx) throws IOException {
+    public void toTextFile(DataOutputStream dos, Settings settings, BOBMaterials materials, BOBPointMap pointMap, int idx) throws IOException {
         // TODO
     }
 

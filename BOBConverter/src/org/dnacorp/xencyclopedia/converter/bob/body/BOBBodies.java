@@ -5,9 +5,7 @@ import org.dnacorp.xencyclopedia.converter.bob.BOBSection;
 import org.dnacorp.xencyclopedia.converter.bob.Settings;
 import org.dnacorp.xencyclopedia.converter.bob.material.BOBMaterials;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,15 +20,15 @@ public class BOBBodies extends BOBSection {
 
     public List<BOBBody> bodyList = new ArrayList<>();
 
-    public void load(FileInputStream fis) throws IOException {
+    public void load(DataInputStream dis) throws IOException {
         // TODO
     }
 
-    public void toBinaryFile(FileOutputStream fos) throws IOException {
+    public void toBinaryFile(DataOutputStream dos) throws IOException {
         // TODO
     }
 
-    public void toPlainFile(FileOutputStream fos, Settings settings, BOBMaterials materials) throws IOException {
+    public void toTextFile(DataOutputStream dos, Settings settings, BOBMaterials materials) throws IOException {
         // TODO
     }
 }

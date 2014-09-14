@@ -11,11 +11,11 @@ import java.util.ArrayList;
  */
 public class BOBX3VertexData extends ArrayList<BOBX3VertexDataRecord>{
 
-    public void load(FileInputStream fis) throws IOException {
+    public void load(DataInputStream dis) throws IOException {
         // TODO
     }
 
-    public void toFile(FileOutputStream fos) throws IOException {
+    public void toFile(DataOutputStream dos) throws IOException {
         // TODO
     }
 

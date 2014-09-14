@@ -20,15 +20,15 @@ public class BOBMaterials extends BOBSection{
     public static final int HDR_MAT5_BEGIN = BOBNames.BOB_SECTION_NAME_MAT5_BEGIN;
     public static final int HDR_END        = BOBNames.BOB_SECTION_NAME_MAT_END;
 
-    public void load(FileInputStream fis) throws IOException {
+    public void load(DataInputStream dis) throws IOException {
         // TODO
     }
 
-    public void toBinaryFile(FileOutputStream fos) throws IOException {
+    public void toBinaryFile(DataOutputStream dos) throws IOException {
         // TODO
     }
 
-    public void toPlainFile(FileOutputStream fos, int index) throws IOException {
+    public void toTextFile(DataOutputStream dos, int index) throws IOException {
         // TODO
     }
 

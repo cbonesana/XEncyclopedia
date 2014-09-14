@@ -18,15 +18,15 @@ public class BOBMaterial6 extends BOBMaterial {
         type = MaterialType.mat6;
     }
 
-    public void load(FileInputStream fis) throws IOException {
+    public void load(DataInputStream dis) throws IOException {
         // TODO
     }
 
-    public void toBinaryFile(FileOutputStream fos) throws IOException {
+    public void toBinaryFile(DataOutputStream dos) throws IOException {
         // TODO
     }
 
-    public void toPlainFile(FileOutputStream fos) throws IOException {
+    public void toTextFile(DataOutputStream dos) throws IOException {
         // TODO
     }
 }

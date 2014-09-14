@@ -14,7 +14,7 @@ public class Value {
     public short boneIndex;
     public int boneCoefficient;
 
-    public void toFile(FileOutputStream fos) throws IOException {
+    public void toFile(DataOutputStream dos) throws IOException {
         byte[] bytes = new byte[2];
         bytes[0] = (byte)(boneIndex & 0xff);
         bytes[1] = (byte)((boneIndex >> 8) & 0xff);

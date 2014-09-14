@@ -19,15 +19,15 @@ public class BOBNotes extends BOBSection {
 
     private List<BOBNote> noteList = new ArrayList<>();
 
-    public void load(FileInputStream fis) {
+    public void load(DataInputStream dis) {
         // TODO
     }
 
-    public void toBinaryFile(FileOutputStream fos) {
+    public void toBinaryFile(DataOutputStream dos) {
         // TODO
     }
 
-    public void toTextFile(FileOutputStream fos) {
+    public void toTextFile(DataOutputStream dos) {
         // TODO
     }
 

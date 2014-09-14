@@ -1,17 +1,19 @@
-package org.dnacorp.xencyclopedia.converter.bob;
+package org.dnacorp.xencyclopedia.converter.bob.dom;
 
+import org.dnacorp.xencyclopedia.converter.bob.BOBInfo;
+import org.dnacorp.xencyclopedia.converter.bob.BOBNames;
+import org.dnacorp.xencyclopedia.converter.bob.BOBSection;
+import org.dnacorp.xencyclopedia.converter.bob.Settings;
 import org.dnacorp.xencyclopedia.converter.bob.body.BOBBodies;
 import org.dnacorp.xencyclopedia.converter.bob.material.BOBMaterials;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * Created by Claudio "Dna" Bonesana
  * Date: 08.09.2014 20:59.
  */
-public class BOBDomBOB extends BOBSection{
+public class BOBDomBOB extends BOBSection {
 
     public static final int HDR_BEGIN = BOBNames.BOB_SECTION_NAME_BOB_BEGIN;
     public static final int HDR_END   = BOBNames.BOB_SECTION_NAME_BOB_END;
@@ -26,15 +28,18 @@ public class BOBDomBOB extends BOBSection{
         this.m_settings = m_settings;
     }
 
-    public void load(FileInputStream fis) throws IOException {
+    public boolean load(DataInputStream dis) throws IOException {
         // TODO
+        return false;
     }
 
-    public void toBinaryFile(FileOutputStream fos) throws IOException {
+    public boolean toBinaryFile(DataOutputStream dos) throws IOException {
         // TODO
+        return false;
     }
 
-    public void toPlainFile(FileOutputStream fos, int index) throws IOException {
+    public boolean toTextFile(DataOutputStream dos) throws IOException {
         // TODO
+        return false;
     }
 }

@@ -18,21 +18,21 @@ public class Vector extends Point3DDouble {
         super(pt);
     }
 
-    public void load(FileInputStream fis) throws IOException {
+    public void load(DataInputStream dis) throws IOException {
         DataInputStream dis = new DataInputStream(fis);
         x = dis.readDouble();
         y = dis.readDouble();
         z = dis.readDouble();
     }
 
-    public void toBinaryFile(FileOutputStream fos) throws IOException {
+    public void toBinaryFile(DataOutputStream dos) throws IOException {
         DataOutputStream dis = new DataOutputStream(fos);
         dis.writeDouble(x);
         dis.writeDouble(y);
         dis.writeDouble(z);
     }
 
-    public void toPlainFile(FileOutputStream fos) throws IOException {
+    public void toTextFile(DataOutputStream dos) throws IOException {
         toBinaryFile(fos);
     }
 

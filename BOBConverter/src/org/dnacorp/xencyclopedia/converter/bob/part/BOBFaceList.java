@@ -14,7 +14,7 @@ import java.util.ArrayList;
  */
 public class BOBFaceList extends ArrayList<BOBFace> {
 
-    private boolean saveVertexTangents(FileOutputStream os, BOBVertices vertices) {
+    private boolean saveVertexTangents(FileDataOutputStream dos, BOBVertices vertices) {
         // TODO
         return false;
     }
@@ -22,15 +22,15 @@ public class BOBFaceList extends ArrayList<BOBFace> {
     public int materialIndex;
     public BOBX3VertexData x3VertexData;
 
-    public void load(FileInputStream fis, boolean x3data) throws IOException {
+    public void load(DataInputStream dis, boolean x3data) throws IOException {
         // TODO
     }
 
-    public void toFile(FileOutputStream fos, BOBVertices vertices, boolean x3data) throws IOException {
+    public void toFile(DataOutputStream dos, BOBVertices vertices, boolean x3data) throws IOException {
         // TODO
     }
 
-    public void outputX3VertexDataRaw(FileOutputStream fos) {
+    public void outputX3VertexDataRaw(DataOutputStream dos) {
         // TODO
     }
 }

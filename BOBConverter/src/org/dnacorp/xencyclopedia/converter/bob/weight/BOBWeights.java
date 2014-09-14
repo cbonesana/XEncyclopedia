@@ -22,7 +22,7 @@ public class BOBWeights extends BOBSection {
     public List<BOBWeight> weightList;
     public List<BOBWeight> newWeights;
 
-    public void load(FileInputStream fis) throws IOException, BOBException {
+    public void load(DataInputStream dis) throws IOException, BOBException {
 
         int header = fis.read();
         if (header != HDR_BEGIN)
@@ -44,7 +44,7 @@ public class BOBWeights extends BOBSection {
             throw new BOBException("Invalid end header for weights.");
     }
 
-    public void toBinaryFile(FileOutputStream fos) throws IOException {
+    public void toBinaryFile(DataOutputStream dos) throws IOException {
         if (newWeights.isEmpty() && weightList.isEmpty())
             return;
 
@@ -63,7 +63,7 @@ public class BOBWeights extends BOBSection {
         fos.write(HDR_END);
     }
 
-    public void toPlainFile(FileOutputStream fos, BOBPointMap pointMap) {
+    public void toTextFile(DataOutputStream dos, BOBPointMap pointMap) {
         // TODO
     }
 

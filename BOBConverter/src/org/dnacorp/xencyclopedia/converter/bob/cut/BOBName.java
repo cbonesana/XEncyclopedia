@@ -15,15 +15,15 @@ public class BOBName extends BOBString {
     public static final int HDR_BEGIN = BOBNames.BOB_SECTION_NAME_NAME_BEGIN;
     public static final int HDR_END   = BOBNames.BOB_SECTION_NAME_NAME_END;
 
-    public void load(FileInputStream fis) {
+    public void load(DataInputStream dis) {
         super.load(fis, HDR_BEGIN, HDR_END);
     }
 
-    public void toBinaryFile(FileOutputStream fos) {
+    public void toBinaryFile(DataOutputStream dos) {
         super.toFile(fos, HDR_BEGIN, HDR_END);
     }
 
-    public void toTextFile(FileOutputStream fos) {
+    public void toTextFile(DataOutputStream dos) {
         // TODO
     }
 

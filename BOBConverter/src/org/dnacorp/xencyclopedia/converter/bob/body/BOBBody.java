@@ -23,15 +23,15 @@ public class BOBBody {
     public int bodySize  = 0;
     public int bodyFlags = 0;
 
-    public void load(FileInputStream fis) throws IOException {
+    public void load(DataInputStream dis) throws IOException {
         // TODO
     }
 
-    public void toBinaryFile(FileOutputStream fos) throws IOException {
+    public void toBinaryFile(DataOutputStream dos) throws IOException {
         // TODO
     }
 
-    public void toPlainFile(FileOutputStream fos, int index) throws IOException {
+    public void toTextFile(DataOutputStream dos, int index) throws IOException {
         // TODO
     }
 }

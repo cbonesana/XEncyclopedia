@@ -13,11 +13,11 @@ public class BOBFace {
     public int[] values = new int[3];
     public int flags;
 
-    public void load(FileInputStream fis) throws IOException {
+    public void load(DataInputStream dis) throws IOException {
         // TODO
     }
 
-    public void toFile(FileOutputStream fos) throws IOException {
+    public void toFile(DataOutputStream dos) throws IOException {
         // TODO
     }
 }

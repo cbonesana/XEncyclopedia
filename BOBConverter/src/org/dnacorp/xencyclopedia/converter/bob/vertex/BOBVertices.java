@@ -23,22 +23,22 @@ public class BOBVertices extends BOBSection {
     public BOBPointMap map;
     public List<BOBVertex> newVertices = new ArrayList<>();
 
-    private void outputRaw(FileOutputStream os) {
+    private void outputRaw(FileDataOutputStream dos) {
         // TODO
     }
-    private void outputBOD(FileOutputStream os) {
-        // TODO
-    }
-
-    public void load(FileInputStream fis) throws IOException {
+    private void outputBOD(FileDataOutputStream dos) {
         // TODO
     }
 
-    public void toBinaryFile(FileOutputStream fos) throws IOException {
+    public void load(DataInputStream dis) throws IOException {
         // TODO
     }
 
-    public void toPlainFile(FileOutputStream fos, int index) throws IOException {
+    public void toBinaryFile(DataOutputStream dos) throws IOException {
+        // TODO
+    }
+
+    public void toTextFile(DataOutputStream dos, int index) throws IOException {
         // TODO
     }
 }

@@ -24,15 +24,15 @@ public class BOBParts extends BOBSection {
 
     public List<BOBPart> partList = new ArrayList<>();
 
-    public void load(FileInputStream fis) throws IOException {
+    public void load(DataInputStream dis) throws IOException {
         // TODO
     }
 
-    public void toBinaryFile(FileOutputStream fos, BOBVertices vertices) throws IOException {
+    public void toBinaryFile(DataOutputStream dos, BOBVertices vertices) throws IOException {
         // TODO
     }
 
-    public void toTextFile(FileOutputStream fos, Settings settings, BOBMaterials materials, BOBPointMap pointMap) throws IOException {
+    public void toTextFile(DataOutputStream dos, Settings settings, BOBMaterials materials, BOBPointMap pointMap) throws IOException {
         // TODO
     }
 }

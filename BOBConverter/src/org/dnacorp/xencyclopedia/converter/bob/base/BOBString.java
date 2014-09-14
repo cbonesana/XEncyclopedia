@@ -2,8 +2,7 @@ package org.dnacorp.xencyclopedia.converter.bob.base;
 
 import org.dnacorp.xencyclopedia.converter.bob.BOBSection;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.*;
 
 /**
  * Created by Claudio "Dna" Bonesana
@@ -21,12 +20,41 @@ public class BOBString extends BOBSection {
         m_text = str;
     }
 
-    public void load(FileInputStream fis, int startHeader, int endHeader) {
-        // TODO
+    public boolean load(DataInputStream dis, int startHeader, int endHeader) throws IOException {
+        int hdr = dis.readInt();
+        if (hdr != startHeader) {
+            error(BOBErrorCodes.e_badHeader);
+            return false;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        char ch;
+        while ((ch = dis.readChar()) != 0x00) {
+            sb.append(ch);
+        }
+        m_text = sb.toString();
+        if (m_text.length() == 0) {
+            error(BOBErrorCodes.e_notEnoughData);
+            return false;
+        }
+
+        hdr = dis.readInt();
+        if (hdr != endHeader)
+            error(BOBErrorCodes.e_badEndHeader);
+        return hdr == endHeader;
     }
 
-    public void toFile(FileOutputStream fos, int begin, int end) {
-        // TODO
+    public void toBinaryFile(DataOutputStream dos, int begin, int end) throws IOException {
+        if (m_text != null && m_text.length() != 0) {
+            dos.writeInt(begin);
+            dos.writeChars(m_text);
+            dos.writeInt(end);
+        }
+    }
+
+    public void toTextFile(DataOutputStream dos) throws IOException {
+        if (m_text != null && m_text.length() != 0)
+            dos.writeChars("/#" + m_text + "\n");
     }
 
 }

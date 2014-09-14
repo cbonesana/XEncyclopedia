@@ -1,13 +1,11 @@
 package org.dnacorp.xencyclopedia.converter.bob.cut;
 
-import org.dnacorp.xencyclopedia.converter.bob.BOBDomBOB;
+import org.dnacorp.xencyclopedia.converter.bob.dom.BOBDomBOB;
 import org.dnacorp.xencyclopedia.converter.bob.BOBNames;
 import org.dnacorp.xencyclopedia.converter.bob.BOBSection;
 import org.dnacorp.xencyclopedia.converter.bob.Settings;
 import org.dnacorp.xencyclopedia.converter.bob.frame.BOBFrame;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,19 +64,19 @@ public class BOBPath extends BOBSection {
         return m_notes;
     }
 
-    private void loadStatValues(FileInputStream fis, int count) {
+    private void loadStatValues(DataInputStream dis, int count) {
         // TODO
     }
 
-    public void load(FileInputStream fis, int version) {
+    public void load(DataInputStream dis, int version) {
         // TODO
     }
 
-    public void toBinaryFile(FileOutputStream fos, int cutVersion) {
+    public void toBinaryFile(DataOutputStream dos, int cutVersion) {
         // TODO
     }
 
-    public void toTextFile(FileOutputStream fos, int idx) {
+    public void toTextFile(DataOutputStream dos, int idx) {
         // TODO
     }
 
