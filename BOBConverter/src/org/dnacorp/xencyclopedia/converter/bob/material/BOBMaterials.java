@@ -58,11 +58,27 @@ public class BOBMaterials extends BOBSection{
     }
 
     public void toBinaryFile(DataOutputStream dos) throws IOException {
-        // TODO
+        int hdr = HDR_MAT5_BEGIN;
+        if (size() > 0 && front().type == BOBMaterial.MaterialType.mat6)
+            hdr = HDR_MAT6_BEGIN;
+
+        dos.write(hdr);
+        dos.write(size());
+        for (BOBMaterial it : materialList) {
+            it.toBinaryFile(dos);
+        }
+        dos.write(HDR_END);
+    }
+
+    private BOBMaterial front() {
+        return materialList.get(0);
     }
 
     public void toTextFile(DataOutputStream dos) throws IOException {
-        // TODO
+        for (BOBMaterial it : materialList) {
+            it.toTextFile(dos);
+            dos.writeChar('\n');
+        }
     }
 
     public int size() {

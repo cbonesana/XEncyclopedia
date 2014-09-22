@@ -163,10 +163,11 @@ public class Point3DInteger {
         return new Point3DInteger(y * b.z - z * b.y, z * b.x - x * b.z, x * b.y - y * b.x);
     }
 
-    public void load(DataInputStream dis) throws IOException {
+    public boolean load(DataInputStream dis) throws IOException {
         x = dis.readInt();
         y = dis.readInt();
         z = dis.readInt();
+        return false;
     }
 
     public void toBinaryFile(DataOutputStream dos) throws IOException {

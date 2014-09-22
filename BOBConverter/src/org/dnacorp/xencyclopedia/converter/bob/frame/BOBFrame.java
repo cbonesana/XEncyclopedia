@@ -4,6 +4,8 @@ import org.dnacorp.xencyclopedia.converter.bob.base.BOBWithErrors;
 import org.dnacorp.xencyclopedia.converter.bob.material.RGB;
 import org.dnacorp.xencyclopedia.converter.bob.vertex.Position3D;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 

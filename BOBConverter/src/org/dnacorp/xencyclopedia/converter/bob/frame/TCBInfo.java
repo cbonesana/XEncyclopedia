@@ -1,5 +1,7 @@
 package org.dnacorp.xencyclopedia.converter.bob.frame;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 

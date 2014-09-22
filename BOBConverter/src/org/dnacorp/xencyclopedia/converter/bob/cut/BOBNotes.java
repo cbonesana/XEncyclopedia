@@ -3,6 +3,8 @@ package org.dnacorp.xencyclopedia.converter.bob.cut;
 import org.dnacorp.xencyclopedia.converter.bob.BOBNames;
 import org.dnacorp.xencyclopedia.converter.bob.BOBSection;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;

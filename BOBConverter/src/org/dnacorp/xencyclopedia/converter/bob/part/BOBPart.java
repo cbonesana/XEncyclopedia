@@ -6,9 +6,7 @@ import org.dnacorp.xencyclopedia.converter.bob.point.BOBPointMap;
 import org.dnacorp.xencyclopedia.converter.bob.vertex.BOBVertex;
 import org.dnacorp.xencyclopedia.converter.bob.vertex.BOBVertices;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 /**

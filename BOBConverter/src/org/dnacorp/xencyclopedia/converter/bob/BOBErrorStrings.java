@@ -23,8 +23,6 @@ public class BOBErrorStrings {
             "Invalid version",
             "Unsupported bits set in frame flags",
             "Unknown material6 value type"
-
-            // don forget to increase bob_error_count below!
     };
 
     public static String bobTranslateError(BOBErrorCodes code) {

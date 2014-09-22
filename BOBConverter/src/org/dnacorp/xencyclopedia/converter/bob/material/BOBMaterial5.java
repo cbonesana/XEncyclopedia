@@ -20,20 +20,22 @@ public class BOBMaterial5 extends BOBMaterial3{
             lightMap.load(dis);
 
         // TODO: check for errorCode=is.fail() ? e_notEnoughData : e_noError;
-        return false;
+        return true;
     }
 
-    public void toBinaryFile(DataOutputStream dos) throws IOException {
+    public boolean toBinaryFile(DataOutputStream dos) throws IOException {
         super.toBinaryFile(dos);
         if (type.value() >  MaterialType.mat3.value())
             lightMap.toBinaryFile(dos);
+        return true;
     }
 
-    public void toTextFile(DataOutputStream dos) throws IOException {
+    public boolean toTextFile(DataOutputStream dos) throws IOException {
         super.toBinaryFile(dos);
         if (type.value() >  MaterialType.mat3.value()) {
             dos.writeChar(';');
             lightMap.toBinaryFile(dos);
         }
+        return true;
     }
 }

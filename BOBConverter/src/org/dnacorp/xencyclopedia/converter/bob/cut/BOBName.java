@@ -3,8 +3,7 @@ package org.dnacorp.xencyclopedia.converter.bob.cut;
 import org.dnacorp.xencyclopedia.converter.bob.BOBNames;
 import org.dnacorp.xencyclopedia.converter.bob.base.BOBString;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.*;
 
 /**
  * Created by Claudio "Dna" Bonesana
@@ -15,12 +14,12 @@ public class BOBName extends BOBString {
     public static final int HDR_BEGIN = BOBNames.BOB_SECTION_NAME_NAME_BEGIN;
     public static final int HDR_END   = BOBNames.BOB_SECTION_NAME_NAME_END;
 
-    public void load(DataInputStream dis) {
-        super.load(fis, HDR_BEGIN, HDR_END);
+    public void load(DataInputStream dis) throws IOException {
+        super.load(dis, HDR_BEGIN, HDR_END);
     }
 
-    public void toBinaryFile(DataOutputStream dos) {
-        super.toFile(fos, HDR_BEGIN, HDR_END);
+    public void toBinaryFile(DataOutputStream dos) throws IOException {
+        super.toBinaryFile(dos, HDR_BEGIN, HDR_END);
     }
 
     public void toTextFile(DataOutputStream dos) {

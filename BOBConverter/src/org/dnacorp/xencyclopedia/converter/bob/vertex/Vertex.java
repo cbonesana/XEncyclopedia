@@ -18,22 +18,21 @@ public class Vertex extends Point3DInteger {
         super(pt);
     }
 
-    public void load(DataInputStream dis) throws IOException {
-        DataInputStream dis = new DataInputStream(fis);
+    public boolean load(DataInputStream dis) throws IOException {
         x = dis.readInt();
         y = dis.readInt();
         z = dis.readInt();
+        return false;
     }
 
     public void toBinaryFile(DataOutputStream dos) throws IOException {
-        DataOutputStream dis = new DataOutputStream(fos);
-        dis.writeInt(x);
-        dis.writeInt(y);
-        dis.writeInt(z);
+        dos.writeInt(x);
+        dos.writeInt(y);
+        dos.writeInt(z);
     }
 
     public void toTextFile(DataOutputStream dos) throws IOException {
-        toBinaryFile(fos);
+        toBinaryFile(dos);
     }
 
 }

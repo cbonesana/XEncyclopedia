@@ -6,6 +6,8 @@ import org.dnacorp.xencyclopedia.converter.bob.BOBSection;
 import org.dnacorp.xencyclopedia.converter.bob.Settings;
 import org.dnacorp.xencyclopedia.converter.bob.frame.BOBFrame;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 

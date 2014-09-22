@@ -2,6 +2,8 @@ package org.dnacorp.xencyclopedia.converter.bob.cut;
 
 import org.dnacorp.xencyclopedia.converter.bob.base.BOBErrorCodes;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 

@@ -1,5 +1,6 @@
 package org.dnacorp.xencyclopedia.converter.bob.weight;
 
+import java.io.DataOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -19,7 +20,7 @@ public class Value {
         bytes[0] = (byte)(boneIndex & 0xff);
         bytes[1] = (byte)((boneIndex >> 8) & 0xff);
 
-        fos.write(bytes);
-        fos.write((int) (boneCoefficient / MULTIPLIER));
+        dos.write(bytes);
+        dos.write((int) (boneCoefficient / MULTIPLIER));
     }
 }

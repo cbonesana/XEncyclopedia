@@ -1,10 +1,9 @@
 package org.dnacorp.xencyclopedia.converter.bob.vertex;
 
+import org.dnacorp.xencyclopedia.converter.bob.base.BOBErrorCodes;
 import org.dnacorp.xencyclopedia.converter.bob.geometry.Point2DDouble;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * Created by Claudio "Dna" Bonesana
@@ -17,11 +16,17 @@ public class BOBVertex extends Vertex {
     public static final int FLAG_WEIRD_STUFF = 4;
 
     public short flags = 0;
-    UVCoord textureCoords;
-    Point2DDouble weirdCoords;
-    int sgbits;
-    NormalVector normalVector;
-    NormalVector tangentVector;
+    public UVCoord textureCoords;
+    public Point2DDouble weirdCoords;
+    public int sgbits;
+    public NormalVector normalVector;
+    public NormalVector tangentVector;
+
+    public BOBErrorCodes errorCode;
+
+    public BOBVertex() {
+        super(0, 0, 0);
+    }
 
     public BOBVertex(int x, int y, int z) {
         super(x, y, z);
@@ -31,8 +36,9 @@ public class BOBVertex extends Vertex {
         return (flags & FLAG_UV) > 0;
     }
 
-    public void load(DataInputStream dis) throws IOException {
+    public boolean load(DataInputStream dis) throws IOException {
         // TODO
+        return false;
     }
 
     public void toBinaryFile(DataOutputStream dos) throws IOException {

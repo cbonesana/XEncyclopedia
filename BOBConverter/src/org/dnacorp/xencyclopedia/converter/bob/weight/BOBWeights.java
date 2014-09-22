@@ -5,9 +5,7 @@ import org.dnacorp.xencyclopedia.converter.bob.BOBNames;
 import org.dnacorp.xencyclopedia.converter.bob.BOBSection;
 import org.dnacorp.xencyclopedia.converter.bob.point.BOBPointMap;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 
 /**
@@ -24,22 +22,22 @@ public class BOBWeights extends BOBSection {
 
     public void load(DataInputStream dis) throws IOException, BOBException {
 
-        int header = fis.read();
+        int header = dis.read();
         if (header != HDR_BEGIN)
             throw new BOBException("Invalid begin header for weights.");
 
-        int count = fis.read();
+        int count = dis.read();
         for (int i=0; i<count; i++) {
             BOBWeight weight = new BOBWeight();
             try {
-                weight.load(fis);
+                weight.load(dis);
             } catch (IOException e) {
                 throw new BOBException("Weight " + i + ": " + e.getMessage());
             }
             weightList.add(weight);
         }
 
-        header = fis.read();
+        header = dis.read();
         if (header != HDR_END)
             throw new BOBException("Invalid end header for weights.");
     }
@@ -48,19 +46,19 @@ public class BOBWeights extends BOBSection {
         if (newWeights.isEmpty() && weightList.isEmpty())
             return;
 
-        fos.write(HDR_BEGIN);
+        dos.write(HDR_BEGIN);
 
         if (!newWeights.isEmpty()) {
-            fos.write(newWeights.size());
+            dos.write(newWeights.size());
             for (BOBWeight weight : newWeights)
-                weight.toBinaryFile(fos);
+                weight.toBinaryFile(dos);
         } else {
-            fos.write(weightList.size());
+            dos.write(weightList.size());
             for (BOBWeight weight : weightList)
-                weight.toBinaryFile(fos);
+                weight.toBinaryFile(dos);
         }
 
-        fos.write(HDR_END);
+        dos.write(HDR_END);
     }
 
     public void toTextFile(DataOutputStream dos, BOBPointMap pointMap) {

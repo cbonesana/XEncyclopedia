@@ -28,18 +28,19 @@ public class BOBMaterial1 extends BOBMaterial {
         specular.load(dis);
 
         // TODO: check for errorCode=is.fail() ? e_notEnoughData : e_noError;
-        return false;
+        return true;
     }
 
-    public void toBinaryFile(DataOutputStream dos) throws IOException {
+    public boolean toBinaryFile(DataOutputStream dos) throws IOException {
         dos.write(index);
         dos.write(textureID);
         ambient.toBinaryFile(dos);
         diffuse.toBinaryFile(dos);
         specular.toBinaryFile(dos);
+        return true;
     }
 
-    public void toTextFile(DataOutputStream dos) throws IOException {
+    public boolean toTextFile(DataOutputStream dos) throws IOException {
         dos.writeChars("MATERIAL");
         switch (type) {
             case mat3: dos.writeChar('3'); break;
@@ -51,5 +52,6 @@ public class BOBMaterial1 extends BOBMaterial {
         ambient.toTextFile(dos);
         diffuse.toTextFile(dos);
         specular.toTextFile(dos);
+        return true;
     }
 }

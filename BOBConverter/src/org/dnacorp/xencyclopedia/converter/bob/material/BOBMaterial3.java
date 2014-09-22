@@ -38,10 +38,10 @@ public class BOBMaterial3 extends BOBMaterial1 {
         }
 
         // TODO: check for errorCode=is.fail() ? e_notEnoughData : e_noError;
-        return false;
+        return true;
     }
 
-    public void toBinaryFile(DataOutputStream dos) throws IOException {
+    public boolean toBinaryFile(DataOutputStream dos) throws IOException {
         super.toBinaryFile(dos);
         dos.writeShort(transparency);
         dos.writeShort(selfIllumination);
@@ -54,9 +54,10 @@ public class BOBMaterial3 extends BOBMaterial1 {
         dos.writeShort(textureValue);
         environmentMap.toBinaryFile(dos);
         bumpMap.toBinaryFile(dos);
+        return true;
     }
 
-    public void toTextFile(DataOutputStream dos) throws IOException {
+    public boolean toTextFile(DataOutputStream dos) throws IOException {
         super.toTextFile(dos);
         dos.writeChar(';');
         dos.write(transparency);
@@ -76,5 +77,6 @@ public class BOBMaterial3 extends BOBMaterial1 {
         environmentMap.toTextFile(dos);
         dos.writeChar(';');
         bumpMap.toTextFile(dos);
+        return true;
     }
 }

@@ -26,12 +26,15 @@
         <module name="BOBConverter" />
         <module name="data-extractor" />
         <module name="object-viewer" />
+        <module name="xrebirth-save-analyzer" />
+        <module name="XRebirthSaveAnalyzer" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="bob-converter" target="1.7" />
       <module name="data-extractor" target="1.7" />
       <module name="object-viewer" target="1.7" />
+      <module name="xrebirth-save-analyzer" target="1.7" />
     </bytecodeTargetLevel>
   </component>
 </project>

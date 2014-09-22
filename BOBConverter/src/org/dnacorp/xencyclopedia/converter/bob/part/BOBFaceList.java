@@ -3,9 +3,7 @@ package org.dnacorp.xencyclopedia.converter.bob.part;
 import org.dnacorp.xencyclopedia.converter.bob.vertex.BOBVertices;
 import org.dnacorp.xencyclopedia.converter.bob.vertex.BOBX3VertexData;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 /**
@@ -14,7 +12,7 @@ import java.util.ArrayList;
  */
 public class BOBFaceList extends ArrayList<BOBFace> {
 
-    private boolean saveVertexTangents(FileDataOutputStream dos, BOBVertices vertices) {
+    private boolean saveVertexTangents(DataOutputStream dos, BOBVertices vertices) {
         // TODO
         return false;
     }

@@ -2,9 +2,7 @@ package org.dnacorp.xencyclopedia.converter.bob.part;
 
 import org.dnacorp.xencyclopedia.converter.bob.geometry.Point3DDouble;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * Created by Claudio "Dna" Bonesana

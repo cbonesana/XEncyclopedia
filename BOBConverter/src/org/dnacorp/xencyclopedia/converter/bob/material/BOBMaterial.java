@@ -30,16 +30,16 @@ public class BOBMaterial {
 
     public boolean load(DataInputStream dis) throws IOException {
         // TODO
-        return false;
+        return true;
     }
 
     public boolean toBinaryFile(DataOutputStream dos) throws IOException {
         // TODO
-        return false;
+        return true;
     }
 
     public boolean toTextFile(DataOutputStream dos) throws IOException {
         // TODO
-        return false;
+        return true;
     }
 }
