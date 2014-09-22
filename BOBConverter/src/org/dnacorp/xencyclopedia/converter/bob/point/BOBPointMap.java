@@ -15,9 +15,9 @@ public class BOBPointMap {
     private int m_compCount = 0;
     private int m_unique_it = 0;
 
-    private List<BOBVertex> m_points;
-    private List<Integer> m_indexes;
-    private List<Integer> m_uniqueIndices = new ArrayList<>();
+    public List<BOBVertex> m_points      = new ArrayList<>();
+    public List<Integer> m_indexes       = new ArrayList<>();
+    public List<Integer> m_uniqueIndices = new ArrayList<>();
 
     public PNode addNode(PNode parent, char id) {
         PNode n, old = null;
@@ -103,8 +103,6 @@ public class BOBPointMap {
     }
 
     public void create(int size) {
-        m_points  = new ArrayList<>();
-        m_indexes = new ArrayList<>();
         m_compCount = 0;
     }
 

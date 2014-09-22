@@ -65,9 +65,7 @@ public class BOBBodies extends BOBSection {
 
     public boolean toTextFile(DataOutputStream dos, Settings settings, BOBMaterials materials) throws IOException {
         int i = 1;
-        dos.writeChars("// beginning of bodies (");
-        dos.writeInt(bodyList.size());
-        dos.writeChars(")\n");
+        dos.writeChars("// beginning of bodies (" + bodyList.size() + ")\n");
         for (BOBBody it : bodyList) {
             if (!it.toTextFile(dos, settings, materials, i)) {
                 for (BOBError e : errors) {

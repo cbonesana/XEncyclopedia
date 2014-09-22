@@ -31,7 +31,7 @@ public class Vector extends Point3DDouble {
     }
 
     public void toTextFile(DataOutputStream dos) throws IOException {
-        toBinaryFile(dos);
+        dos.writeChars(x + ";" + y + ";" + z  + ";");
     }
 
 }

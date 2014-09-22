@@ -102,10 +102,10 @@ public class Material6Value {
 
         switch (type) {
             case typeBool:
-            case typeLong: dos.write(val.i); dos.writeChar(';'); break;
-            case typeFloat: dos.writeFloat(val.f); dos.writeChar(';'); break;
+            case typeLong: dos.writeChars(val.i + ";"); break;
+            case typeFloat: dos.writeChars(val.f + ";"); break;
             case typeFloat4: val.f4.toTextFile(dos); dos.writeChar(';'); break;
-            case typeString: dos.writeChars(val.psz); dos.writeChar(';'); break;
+            case typeString: dos.writeChars(val.psz + ";"); break;
             default: return false;
         }
         dos.writeChar(' ');

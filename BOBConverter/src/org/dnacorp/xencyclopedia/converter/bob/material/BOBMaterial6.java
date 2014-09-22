@@ -47,9 +47,7 @@ public class BOBMaterial6 extends BOBMaterial {
     }
 
     public boolean toTextFile(DataOutputStream dos) throws IOException {
-        dos.writeChars("MATERIAL6: ");
-        dos.write(index); dos.writeChar(';');
-        dos.writeChars("0x" + String.format("%x", flags));
+        dos.writeChars("MATERIAL6: " + index + ";" + "0x" + String.format("%x", flags));
 
         if(big != null)
             big.toTextFile(dos);

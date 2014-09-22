@@ -30,9 +30,7 @@ public class Big {
     }
 
     public boolean toTextFile(DataOutputStream dos) throws IOException {
-        dos.write(technique);
-        dos.writeChar(';');
-        dos.writeChars(effect);
+        dos.writeChars(technique + ";" + effect + ";");
         values.toTextFile(dos);
         return true;
     }

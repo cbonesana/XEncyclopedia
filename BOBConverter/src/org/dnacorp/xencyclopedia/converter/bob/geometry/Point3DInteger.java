@@ -177,12 +177,7 @@ public class Point3DInteger {
     }
 
     public void toTextFile(DataOutputStream dos) throws IOException {
-        dos.writeInt(x);
-        dos.writeChar(' ');
-        dos.writeInt(y);
-        dos.writeChar(' ');
-        dos.writeInt(z);
-        dos.writeChar(' ');
+        dos.writeChars(x + " " + y + " " + z + " ");
     }
 
 }

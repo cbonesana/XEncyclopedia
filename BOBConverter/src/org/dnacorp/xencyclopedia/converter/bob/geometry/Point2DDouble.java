@@ -10,8 +10,8 @@ import java.io.IOException;
  */
 public class Point2DDouble {
 
-    protected double x;
-    protected double y;
+    public double x;
+    public double y;
 
     public Point2DDouble(double x, double y) {
         this.x = x;
@@ -150,10 +150,7 @@ public class Point2DDouble {
     }
 
     public void toTextFile(DataOutputStream dos) throws IOException {
-        dos.writeDouble(x);
-        dos.writeChar(' ');
-        dos.writeDouble(y);
-        dos.writeChar(' ');
+        dos.writeChars(x + " " + y + " ");
     }
 
 }

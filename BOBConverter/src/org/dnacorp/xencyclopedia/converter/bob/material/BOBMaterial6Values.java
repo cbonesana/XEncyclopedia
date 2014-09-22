@@ -34,7 +34,7 @@ public class BOBMaterial6Values {
     }
 
     public void toTextFile(DataOutputStream dos) throws IOException {
-        dos.write(materialList.size());
+        dos.writeChars(materialList.size() + ";");
         for (Material6Value it : materialList)
             it.toTextFile(dos);
     }

@@ -29,8 +29,6 @@ public class PairTexture {
     }
 
     public void toTextFile(DataOutputStream dos) throws IOException {
-        dos.writeChars(texture);
-        dos.writeChar(';');
-        dos.writeShort(strength);
+        dos.writeChars(texture + ";" + strength);
     }
 }

@@ -145,11 +145,7 @@ public class Point2DInteger {
     }
 
     public void toTextFile(DataOutputStream dos) throws IOException {
-        dos.writeInt(x);
-        dos.writeChar(' ');
-        dos.writeInt(y);
-        dos.writeChar(' ');
-        dos.writeChar(' ');
+        dos.writeChars(x + " " + y + " ");
     }
 
 }

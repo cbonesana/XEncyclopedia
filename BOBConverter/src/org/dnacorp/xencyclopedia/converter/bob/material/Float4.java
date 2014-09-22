@@ -22,9 +22,7 @@ public class Float4 {
     }
 
     public void toTextFile(DataOutputStream dos) throws IOException {
-        for (float a : f) {
-            dos.writeFloat(a);
-            dos.writeChar(';');
-        }
+        for (float a : f)
+            dos.writeChars(a + ";");
     }
 }

@@ -74,10 +74,10 @@ public class Small {
         ambient.toTextFile(dos); dos.writeChar(';');
         diffuse.toTextFile(dos); dos.writeChar(';');
         specular.toTextFile(dos); dos.writeChar(';');
-        dos.write(transparency); dos.writeChar(';');
-        dos.write(selfIllumination); dos.writeChar(';');
+        dos.writeChars(transparency + ";");
+        dos.writeChars(selfIllumination + ";");
         shininess.toTextFile(dos); dos.writeChar(';');
-        dos.writeShort(textureValue); dos.writeChar(';');
+        dos.writeChars(textureValue + ";");
         enviromentMap.toTextFile(dos); dos.writeChar(';');
         bumpMap.toTextFile(dos); dos.writeChar(';');
         lightMap.toTextFile(dos); dos.writeChar(';');

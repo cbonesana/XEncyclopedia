@@ -10,9 +10,9 @@ import java.io.IOException;
  */
 public class Point3DDouble {
 
-    protected double x;
-    protected double y;
-    protected double z;
+    public double x;
+    public double y;
+    public double z;
 
     public Point3DDouble(double x, double y, double z) {
         this.x = x;
@@ -175,12 +175,7 @@ public class Point3DDouble {
     }
 
     public void toTextFile(DataOutputStream dos) throws IOException {
-        dos.writeDouble(x);
-        dos.writeChar(' ');
-        dos.writeDouble(y);
-        dos.writeChar(' ');
-        dos.writeDouble(z);
-        dos.writeChar(' ');
+        dos.writeChars(x + " " + y + " " + z + " ");
     }
 
 }

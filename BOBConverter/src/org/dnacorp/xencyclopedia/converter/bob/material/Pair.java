@@ -24,8 +24,6 @@ public class Pair {
     }
 
     public void toTextFile(DataOutputStream dos) throws IOException {
-        dos.write(value);
-        dos.writeChar(';');
-        dos.write(strength);
+        dos.writeChars(value + ";" + strength);
     }
 }

@@ -59,21 +59,9 @@ public class BOBMaterial3 extends BOBMaterial1 {
 
     public boolean toTextFile(DataOutputStream dos) throws IOException {
         super.toTextFile(dos);
-        dos.writeChar(';');
-        dos.write(transparency);
-        dos.writeChar(';');
-        dos.write(selfIllumination);
-        dos.writeChar(';');
+        dos.writeChars(";" + transparency + ";" + selfIllumination + ";");
         shininess.toTextFile(dos);
-        dos.writeChar(';');
-        dos.writeBoolean(destinationBlend);
-        dos.writeChar(';');
-        dos.writeBoolean(twoSided);
-        dos.writeChar(';');
-        dos.writeBoolean(wireframe);
-        dos.writeChar(';');
-        dos.write(textureValue);
-        dos.writeChar(';');
+        dos.writeChars(";" + destinationBlend  + ";" + twoSided + ";" + wireframe + ";" + textureValue + ";");
         environmentMap.toTextFile(dos);
         dos.writeChar(';');
         bumpMap.toTextFile(dos);

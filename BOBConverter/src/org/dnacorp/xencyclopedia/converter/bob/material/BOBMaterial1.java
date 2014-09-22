@@ -46,9 +46,7 @@ public class BOBMaterial1 extends BOBMaterial {
             case mat3: dos.writeChar('3'); break;
             case mat5: dos.writeChar('5'); break;
         }
-        dos.writeChars(": ");
-        dos.write(index);
-        dos.write(textureID);
+        dos.writeChars(": " + index + " " + textureID + " ");
         ambient.toTextFile(dos);
         diffuse.toTextFile(dos);
         specular.toTextFile(dos);

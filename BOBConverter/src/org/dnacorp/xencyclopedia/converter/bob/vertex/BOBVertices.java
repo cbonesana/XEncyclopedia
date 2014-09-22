@@ -23,13 +23,39 @@ public class BOBVertices extends BOBSection {
     public BOBPointMap map;
     public List<BOBVertex> newVertices = new ArrayList<>();
 
-    private boolean outputRaw(DataOutputStream dos) {
-        // TODO (*)
-        return false;
+    private boolean outputRaw(DataOutputStream dos) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        int i=0;
+
+        sb.append("// Vertices begin").append(map.pointsSize()).append(" - ").append(map.uniquePointsSize()).append("\n");
+        for (BOBVertex it : map.m_points) {
+            sb.append(it.x).append(";").append(it.y).append(";").append(it.y);
+            if (it.hasTextureCoords())
+                sb.append("\t\tUV: ").append(it.textureCoords.x).append(";").append(it.textureCoords.y);
+            if ((it.flags & BOBVertex.FLAG_WEIRD_STUFF) > 0) {
+                sb.append("\tWeird coords: ").append(it.weirdCoords.x).append(";").append(it.weirdCoords.y);
+            }
+            sb.append("\tNormal: ").append(it.normalVector.x).append(";").append(it.normalVector.y).append(";").append(it.normalVector.z);
+            sb.append("\tSGBits: ").append(it.sgbits);
+            sb.append("//").append(i).append("\n");
+        }
+        sb.append("-1; -1; -1; // Vertices end\n\n");
+
+        dos.writeChars(sb.toString());
+
+        return true;
     }
-    private boolean outputBOD(DataOutputStream dos) {
-        // TODO
-        return false;
+    private boolean outputBOD(DataOutputStream dos) throws IOException {
+        int i=0;
+        dos.writeChars("// beginning of points (" + map.uniquePointsSize() + ")\n");
+
+        BOBVertex p;
+        while ((p=map.nextUniquePoint()) != null) {
+            p.toBinaryFile(dos);
+        }
+        dos.writeChars("-1; -1; -1; // points end\n\n");
+
+        return true;
     }
 
     public boolean load(DataInputStream dis) throws IOException {
@@ -78,7 +104,7 @@ public class BOBVertices extends BOBSection {
         return true;
     }
 
-    public void toTextFile(DataOutputStream dos, Settings settings) throws IOException {
+    public boolean toTextFile(DataOutputStream dos, Settings settings) throws IOException {
         if (settings.rawMode())
             return outputRaw(dos);
         else
