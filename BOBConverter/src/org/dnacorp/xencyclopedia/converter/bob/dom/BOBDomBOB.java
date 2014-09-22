@@ -7,7 +7,6 @@ import org.dnacorp.xencyclopedia.converter.bob.Settings;
 import org.dnacorp.xencyclopedia.converter.bob.base.BOBError;
 import org.dnacorp.xencyclopedia.converter.bob.base.BOBErrorCodes;
 import org.dnacorp.xencyclopedia.converter.bob.body.BOBBodies;
-import org.dnacorp.xencyclopedia.converter.bob.material.BOBMaterial;
 import org.dnacorp.xencyclopedia.converter.bob.material.BOBMaterials;
 
 import java.io.*;
@@ -23,9 +22,9 @@ public class BOBDomBOB extends BOBSection {
 
     private Settings m_settings;
 
-    public BOBInfo info;
-    public BOBMaterials materials;
-    public BOBBodies bodies;
+    public BOBInfo info           = new BOBInfo();
+    public BOBMaterials materials = new BOBMaterials();
+    public BOBBodies bodies       = new BOBBodies();
 
     public BOBDomBOB(Settings m_settings) {
         this.m_settings = m_settings;

@@ -28,7 +28,7 @@ public class BOBDomCUT extends BOBSection {
     private Settings m_settings;
 
     public int version;
-    public BOBInfo info;
+    public BOBInfo info = new BOBInfo();
 
     public BOBDomCUT(Settings settings) {
         this.m_settings = settings;

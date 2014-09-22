@@ -42,7 +42,7 @@ public class Material6Value {
 
     public Type type;
     public String name;
-    public TagValue val;
+    public TagValue val = new TagValue();
 
     public Material6Value() {
         val.i = 0;

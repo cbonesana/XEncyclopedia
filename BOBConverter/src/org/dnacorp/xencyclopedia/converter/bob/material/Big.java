@@ -15,7 +15,7 @@ public class Big {
     public String effect   = null;
     public short technique = 0;
 
-    public BOBMaterial6Values values;
+    public BOBMaterial6Values values = new BOBMaterial6Values();
 
     public BOBErrorCodes load(DataInputStream dis) throws IOException {
         technique = dis.readShort();

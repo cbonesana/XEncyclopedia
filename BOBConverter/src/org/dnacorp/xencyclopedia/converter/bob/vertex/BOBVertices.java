@@ -18,9 +18,9 @@ import java.util.List;
 public class BOBVertices extends BOBSection {
 
     public static final int HDR_BEGIN = BOBNames.BOB_SECTION_NAME_POINT_BEGIN;
-    public static final int HDR_END = BOBNames.BOB_SECTION_NAME_POINT_END;
+    public static final int HDR_END   = BOBNames.BOB_SECTION_NAME_POINT_END;
 
-    public BOBPointMap map;
+    public BOBPointMap map             = new BOBPointMap();
     public List<BOBVertex> newVertices = new ArrayList<>();
 
     private boolean outputRaw(DataOutputStream dos) throws IOException {

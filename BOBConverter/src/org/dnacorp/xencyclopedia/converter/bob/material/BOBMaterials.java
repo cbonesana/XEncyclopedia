@@ -6,6 +6,7 @@ import org.dnacorp.xencyclopedia.converter.bob.BOBSection;
 import org.dnacorp.xencyclopedia.converter.bob.base.BOBErrorCodes;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,11 +15,11 @@ import java.util.List;
  */
 public class BOBMaterials extends BOBSection{
 
-    public List<BOBMaterial> materialList;
-
     public static final int HDR_MAT6_BEGIN = BOBNames.BOB_SECTION_NAME_MAT6_BEGIN;
     public static final int HDR_MAT5_BEGIN = BOBNames.BOB_SECTION_NAME_MAT5_BEGIN;
     public static final int HDR_END        = BOBNames.BOB_SECTION_NAME_MAT_END;
+
+    public List<BOBMaterial> materialList  = new ArrayList<>();
 
     public boolean load(DataInputStream dis) throws IOException {
         int hdr = dis.readInt();

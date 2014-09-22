@@ -11,7 +11,7 @@ import java.io.FileOutputStream;
  */
 public class Constant {
 
-    public int a = 0;
+    public int a    = 0;
     public double b = 0.0;
 
     public void load(DataInputStream dis) {

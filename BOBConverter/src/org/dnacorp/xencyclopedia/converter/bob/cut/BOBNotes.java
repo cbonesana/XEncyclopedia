@@ -17,9 +17,9 @@ import java.util.List;
 public class BOBNotes extends BOBSection {
 
     public static final int HDR_BEGIN = BOBNames.BOB_SECTION_NAME_NOTE_BEGIN;
-    public static final int HDR_END   =BOBNames.BOB_SECTION_NAME_NOTE_END;
+    public static final int HDR_END   = BOBNames.BOB_SECTION_NAME_NOTE_END;
 
-    private List<BOBNote> noteList = new ArrayList<>();
+    private List<BOBNote> noteList    = new ArrayList<>();
 
     public void load(DataInputStream dis) {
         // TODO

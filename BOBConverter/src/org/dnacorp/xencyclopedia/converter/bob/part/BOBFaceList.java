@@ -18,7 +18,7 @@ public class BOBFaceList extends ArrayList<BOBFace> {
     }
 
     public int materialIndex;
-    public BOBX3VertexData x3VertexData;
+    public BOBX3VertexData x3VertexData = new BOBX3VertexData();
 
     public void load(DataInputStream dis, boolean x3data) throws IOException {
         // TODO

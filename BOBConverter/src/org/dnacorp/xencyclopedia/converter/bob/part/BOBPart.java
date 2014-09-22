@@ -20,7 +20,7 @@ public class BOBPart extends ArrayList<BOBFaceList> {
     public static final int BOD_FLAG_SGBITS = 16;
 
     public int flags = 0;
-    public BOBPartCollisionBox collisionBox;
+    public BOBPartCollisionBox collisionBox = new BOBPartCollisionBox();
 
     private void outputX3VertexData(DataOutputStream dos, BOBPointMap pointMap) {
         // TODO

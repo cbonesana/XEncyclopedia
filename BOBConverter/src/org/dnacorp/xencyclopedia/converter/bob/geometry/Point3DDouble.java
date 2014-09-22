@@ -14,6 +14,8 @@ public class Point3DDouble {
     public double y;
     public double z;
 
+    public Point3DDouble() {}
+
     public Point3DDouble(double x, double y, double z) {
         this.x = x;
         this.y = y;

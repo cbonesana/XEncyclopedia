@@ -13,7 +13,7 @@ public class Error {
     private ErrorCode e;
 
     public int code;
-    public String text;
+    public String text = "";
 
     public void makeCode(ErrorFacility f, ErrorSeverity s, ErrorCode e) {
         this.f = f;

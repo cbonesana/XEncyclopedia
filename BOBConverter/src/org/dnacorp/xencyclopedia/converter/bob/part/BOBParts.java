@@ -20,7 +20,7 @@ public class BOBParts extends BOBSection {
     public static final int HDR_BEGIN = BOBNames.BOB_SECTION_NAME_PART_BEGIN;
     public static final int HDR_END   = BOBNames.BOB_SECTION_NAME_PART_END;
 
-    public List<BOBPart> partList = new ArrayList<>();
+    public List<BOBPart> partList     = new ArrayList<>();
 
     public void load(DataInputStream dis) throws IOException {
         // TODO

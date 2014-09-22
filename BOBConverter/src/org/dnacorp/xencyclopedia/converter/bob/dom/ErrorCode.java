@@ -5,7 +5,6 @@ package org.dnacorp.xencyclopedia.converter.bob.dom;
  * Date: 12.09.2014 18:51.
  */
 public enum ErrorCode {
-
     // BOB converter
     E_BadHeader(0),
     E_BadEndHeader(1),

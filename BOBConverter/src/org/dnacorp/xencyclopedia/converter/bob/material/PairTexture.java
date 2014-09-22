@@ -13,6 +13,8 @@ public class PairTexture {
     public String texture;
     public short strength;
 
+    public PairTexture() {}
+
     public PairTexture(PairTexture other) {
         texture = other.texture;
         strength = other.strength;

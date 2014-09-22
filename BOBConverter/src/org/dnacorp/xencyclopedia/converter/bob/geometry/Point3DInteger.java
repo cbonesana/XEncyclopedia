@@ -15,6 +15,8 @@ public class Point3DInteger {
     public int y;
     public int z;
 
+    public Point3DInteger() {}
+
     public Point3DInteger(int x, int y, int z) {
         this.x = x;
         this.y = y;
@@ -170,14 +172,16 @@ public class Point3DInteger {
         return false;
     }
 
-    public void toBinaryFile(DataOutputStream dos) throws IOException {
+    public boolean toBinaryFile(DataOutputStream dos) throws IOException {
         dos.writeInt(x);
         dos.writeInt(y);
         dos.writeInt(z);
+        return true;
     }
 
-    public void toTextFile(DataOutputStream dos) throws IOException {
+    public boolean toTextFile(DataOutputStream dos) throws IOException {
         dos.writeChars(x + " " + y + " " + z + " ");
+        return true;
     }
 
 }

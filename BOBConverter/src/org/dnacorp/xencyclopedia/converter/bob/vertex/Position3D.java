@@ -8,6 +8,10 @@ import org.dnacorp.xencyclopedia.converter.bob.geometry.Point3DInteger;
  */
 public class Position3D extends Vertex {
 
+    public Position3D() {
+        super();
+    }
+
     public Position3D(int x, int y, int z) {
         super(x, y, z);
     }

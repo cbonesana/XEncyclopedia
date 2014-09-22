@@ -10,22 +10,22 @@ import java.io.*;
  */
 public class Small {
 
-    public String textureFile = null;
-    public RGB ambient;
-    public RGB diffuse;
-    public RGB specular;
-    public int transparency = 0;
-    public short selfIllumination = 0;
-    public Pair shininess;
-    public boolean destinationBlend = false;
-    public boolean twoSided = false;
-    public boolean wireframe = false;
+    public String textureFile        = "";
+    public RGB ambient               = new RGB();
+    public RGB diffuse               = new RGB();
+    public RGB specular              = new RGB();
+    public int transparency          = 0;
+    public short selfIllumination    = 0;
+    public Pair shininess            = new Pair();
+    public boolean destinationBlend  = false;
+    public boolean twoSided          = false;
+    public boolean wireframe         = false;
     public short textureValue;
-    public PairTexture enviromentMap;
-    public PairTexture bumpMap;
-    public PairTexture lightMap;
-    public PairTexture map4;
-    public PairTexture map5;
+    public PairTexture enviromentMap = new PairTexture();
+    public PairTexture bumpMap       = new PairTexture();
+    public PairTexture lightMap      = new PairTexture();
+    public PairTexture map4          = new PairTexture();
+    public PairTexture map5          = new PairTexture();
 
     public BOBErrorCodes load(DataInputStream dis, int flags) throws IOException {
         textureFile = dis.readUTF();

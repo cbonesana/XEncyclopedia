@@ -10,10 +10,10 @@ import java.io.*;
  */
 public class BOBPartCollisionBox {
 
-    public Point3DDouble sphereOffse;
-    public double sphereDiameter = 0;
-    public Point3DDouble boxOffset;
-    public Point3DDouble boxSize;
+    public Point3DDouble sphereOffse = new Point3DDouble();
+    public double sphereDiameter     = 0;
+    public Point3DDouble boxOffset   = new Point3DDouble();
+    public Point3DDouble boxSize     = new Point3DDouble();
 
     public void load(DataInputStream dis) throws IOException {
         // TODO

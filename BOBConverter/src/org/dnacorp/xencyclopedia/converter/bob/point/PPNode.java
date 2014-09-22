@@ -9,5 +9,5 @@ import org.dnacorp.xencyclopedia.converter.bob.vertex.BOBVertex;
 public class PPNode extends PNode {
 
     public int index;
-    public BOBVertex pnt;
+    public BOBVertex pnt = new BOBVertex();
 }

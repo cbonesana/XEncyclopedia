@@ -20,7 +20,7 @@ public class BOBBodies extends BOBSection {
     public static final int HDR_BEGIN = BOBNames.BOB_SECTION_NAME_BODY_BEGIN;
     public static final int HDR_END   = BOBNames.BOB_SECTION_NAME_BODY_END;
 
-    public List<BOBBody> bodyList = new ArrayList<>();
+    public List<BOBBody> bodyList     = new ArrayList<>();
 
     public boolean load(DataInputStream dis) throws IOException {
         int hdr = dis.readInt();

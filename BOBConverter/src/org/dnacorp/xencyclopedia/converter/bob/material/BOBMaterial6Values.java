@@ -3,6 +3,7 @@ package org.dnacorp.xencyclopedia.converter.bob.material;
 import org.dnacorp.xencyclopedia.converter.bob.base.BOBErrorCodes;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,7 +12,7 @@ import java.util.List;
  */
 public class BOBMaterial6Values {
 
-    public List<Material6Value> materialList;
+    public List<Material6Value> materialList = new ArrayList<>();
 
     public BOBErrorCodes load(DataInputStream dis) throws IOException {
         short count = dis.readShort();

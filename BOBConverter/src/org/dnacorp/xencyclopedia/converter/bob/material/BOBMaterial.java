@@ -25,8 +25,8 @@ public class BOBMaterial {
 
     public BOBErrorCodes errorCode;
 
-    public MaterialType type;
-    public short index = 0;
+    public MaterialType type = null;
+    public short index       = 0;
 
     public boolean load(DataInputStream dis) throws IOException {
         // TODO

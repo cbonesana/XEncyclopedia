@@ -8,6 +8,10 @@ import org.dnacorp.xencyclopedia.converter.bob.geometry.Point3DDouble;
  */
 public class NormalVector extends Vector {
 
+    public NormalVector() {
+        super();
+    }
+
     public NormalVector(double x, double y, double z) {
         super(x, y, z);
     }

@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class BOBPointMap {
 
-    private PNode m_root;
+    private PNode m_root    = new PNode();
     private int m_compCount = 0;
     private int m_unique_it = 0;
 

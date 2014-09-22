@@ -1,6 +1,7 @@
 package org.dnacorp.xencyclopedia.converter.bob;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,7 +13,7 @@ public class BOBBones extends BOBSection {
     public static final int HDR_BEGIN = BOBNames.BOB_SECTION_NAME_BONE_BEGIN;
     public static final int HDR_END   = BOBNames.BOB_SECTION_NAME_BONE_END;
 
-    public List<String> boneList;
+    public List<String> boneList      = new ArrayList<>();
 
     public void load(DataInputStream dis) throws IOException {
         // TODO

@@ -10,6 +10,10 @@ import java.io.*;
  */
 public class Vertex extends Point3DInteger {
 
+    public Vertex() {
+        super();
+    }
+
     public Vertex(int x, int y, int z) {
         super(x, y, z);
     }
@@ -25,14 +29,16 @@ public class Vertex extends Point3DInteger {
         return false;
     }
 
-    public void toBinaryFile(DataOutputStream dos) throws IOException {
+    public boolean toBinaryFile(DataOutputStream dos) throws IOException {
         dos.writeInt(x);
         dos.writeInt(y);
         dos.writeInt(z);
+        return true;
     }
 
-    public void toTextFile(DataOutputStream dos) throws IOException {
+    public boolean toTextFile(DataOutputStream dos) throws IOException {
         toBinaryFile(dos);
+        return true;
     }
 
 }

@@ -9,11 +9,13 @@ import java.io.*;
 public class BOBX3VertexDataRecord {
 
     public int pointIndex;
-    public Vector tangent;
-    public Vector unk;
+    public Vector tangent = new Vector();
+    public Vector unk     = new Vector();
 
     public void load(DataInputStream dis) throws IOException {
-        // TODO
+        pointIndex = dis.readInt();
+        tangent.load(dis);
+        unk.load(dis);
     }
 
     public void toFile(DataOutputStream dos) throws IOException {

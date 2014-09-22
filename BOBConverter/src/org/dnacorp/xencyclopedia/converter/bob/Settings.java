@@ -1,5 +1,6 @@
 package org.dnacorp.xencyclopedia.converter.bob;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,7 +34,7 @@ public class Settings {
         String message;
     }
 
-    public List<ErrorMsg> errorList;
+    public List<ErrorMsg> errorList = new ArrayList<>();
 
     private boolean m_bOutputWarnings;      // write warnings to file
     private boolean m_bRawMode;				// don't convert to BOD format

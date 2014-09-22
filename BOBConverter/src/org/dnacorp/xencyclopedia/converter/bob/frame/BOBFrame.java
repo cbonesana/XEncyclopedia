@@ -34,20 +34,20 @@ public class BOBFrame extends BOBWithErrors {
     public static final int CUT_F_TPOSTCBINFO    = 0x20000;
     public static final int CUT_F_FAKEROTTCBINFO = 0x40000;
 
-    public static int flagMask = CUT_F_LINEAR|CUT_F_ROT|CUT_F_TARGETPOS|CUT_F_SAMEPOS|CUT_F_SAMEROT|CUT_F_SAMETARGET|CUT_F_BEZIER|CUT_F_SAMESCALE|CUT_F_COLOR|CUT_F_SAMECOLOR|CUT_F_FOV|CUT_F_SAMEFOV|CUT_F_ABSROT|CUT_F_POSTCBINFO|CUT_F_ROTTCBINFO|CUT_F_TPOSTCBINFO|CUT_F_FAKEROTTCBINFO;
+    public static int flagMask   = CUT_F_LINEAR|CUT_F_ROT|CUT_F_TARGETPOS|CUT_F_SAMEPOS|CUT_F_SAMEROT|CUT_F_SAMETARGET|CUT_F_BEZIER|CUT_F_SAMESCALE|CUT_F_COLOR|CUT_F_SAMECOLOR|CUT_F_FOV|CUT_F_SAMEFOV|CUT_F_ABSROT|CUT_F_POSTCBINFO|CUT_F_ROTTCBINFO|CUT_F_TPOSTCBINFO|CUT_F_FAKEROTTCBINFO;
 
-    public int flags = 0;
+    public int flags             = 0;
     public Position3D position;
-    public AngleAxis rotation;
+    public AngleAxis rotation    = new AngleAxis();
     public Position3D targetPos;
-    public double rollAngle = 0.0;
-    public TCBInfo pos_tcb_info;
-    public TCBInfo rot_tcb_info;
-    public TCBInfo tpos_tcb_info;
-    public double fov = 0.0;
-    public RGB color;
-    public int length = 0;
-    public int index = 0;
+    public double rollAngle      = 0.0;
+    public TCBInfo pos_tcb_info  = new TCBInfo();
+    public TCBInfo rot_tcb_info  = new TCBInfo();
+    public TCBInfo tpos_tcb_info = new TCBInfo();
+    public double fov            = 0.0;
+    public RGB color             = new RGB();
+    public int length            = 0;
+    public int index             = 0;
 
     public int valueCount() {
         // TODO

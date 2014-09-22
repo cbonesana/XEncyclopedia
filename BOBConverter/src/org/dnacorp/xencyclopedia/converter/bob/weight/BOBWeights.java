@@ -6,6 +6,7 @@ import org.dnacorp.xencyclopedia.converter.bob.BOBSection;
 import org.dnacorp.xencyclopedia.converter.bob.point.BOBPointMap;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,8 +18,8 @@ public class BOBWeights extends BOBSection {
     public static final int HDR_BEGIN = BOBNames.BOB_SECTION_NAME_WEIGHT_BEGIN;
     public static final int HDR_END   = BOBNames.BOB_SECTION_NAME_WEIGHT_END;
 
-    public List<BOBWeight> weightList;
-    public List<BOBWeight> newWeights;
+    public List<BOBWeight> weightList = new ArrayList<>();
+    public List<BOBWeight> newWeights = new ArrayList<>();
 
     public void load(DataInputStream dis) throws IOException, BOBException {
 

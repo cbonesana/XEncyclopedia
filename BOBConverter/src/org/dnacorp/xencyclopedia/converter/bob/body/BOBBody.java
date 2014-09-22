@@ -16,10 +16,10 @@ import java.io.*;
  */
 public class BOBBody extends BOBWithErrors {
 
-    public BOBBones bones;
-    public BOBVertices vertices;
-    public BOBParts parts;
-    public BOBWeights weights;
+    public BOBBones bones       = new BOBBones();
+    public BOBVertices vertices = new BOBVertices();
+    public BOBParts parts       = new BOBParts();
+    public BOBWeights weights   = new BOBWeights();
 
     public int bodySize  = 0;
     public int bodyFlags = 0;

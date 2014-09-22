@@ -1,5 +1,6 @@
 package org.dnacorp.xencyclopedia.converter.bob.base;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -8,9 +9,9 @@ import java.util.List;
  */
 public class BOBError {
 
-    public BOBErrorCodes code;
-    public BOBErrorSeverity severity;
-    public String text;
+    public BOBErrorCodes code        = null;
+    public BOBErrorSeverity severity = null;
+    public String text               = "";
 
-    public List<BOBError> errors;
+    public List<BOBError> errors     = new ArrayList<>();
 }

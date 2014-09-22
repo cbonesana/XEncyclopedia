@@ -10,7 +10,7 @@ import java.io.*;
  */
 public class BOBString extends BOBSection {
 
-    public String m_text;
+    public String m_text = "";
 
     public String text() {
         return m_text;

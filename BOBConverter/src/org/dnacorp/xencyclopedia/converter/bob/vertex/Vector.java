@@ -10,6 +10,10 @@ import java.io.*;
  */
 public class Vector extends Point3DDouble {
 
+    public Vector() {
+        super();
+    }
+
     public Vector(double x, double y, double z) {
         super(x, y, z);
     }

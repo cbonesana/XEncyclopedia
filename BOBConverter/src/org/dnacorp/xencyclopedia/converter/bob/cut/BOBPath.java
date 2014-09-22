@@ -37,15 +37,15 @@ public class BOBPath extends BOBSection {
     public static final int HDR_END   = BOBNames.BOB_SECTION_NAME_PATH_END;
 
     private List<BOBFrame> frameContainer = new ArrayList<>();
-    private List<Integer> tempStatList    = new ArrayList<>();
-    private List<BOBFrame> children = new ArrayList<>();
+    private List<Integer>  tempStatList   = new ArrayList<>();
+    private List<BOBFrame> children       = new ArrayList<>();
 
-    private BOBNotes m_notes;
-    private Settings settings;
-    private String m_bodyId;
+    private BOBNotes m_notes      = new BOBNotes();
+    private Settings settings     = new Settings();
+    private String m_bodyId       = "";
 
-    public BOBName name;
-    public BOBConstants constants;
+    public BOBName name           = new BOBName();
+    public BOBConstants constants = new BOBConstants() ;
 
     public int partIdx;
     public int cockpitIdx;

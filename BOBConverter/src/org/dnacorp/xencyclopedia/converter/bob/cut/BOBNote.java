@@ -13,8 +13,8 @@ import java.io.FileOutputStream;
  */
 public class BOBNote {
 
-    public int value = 0;
-    public String text;
+    public int value               = 0;
+    public String text             = "";
     public BOBErrorCodes errorCode = BOBErrorCodes.e_noError;
 
     public void load(DataInputStream dis) {

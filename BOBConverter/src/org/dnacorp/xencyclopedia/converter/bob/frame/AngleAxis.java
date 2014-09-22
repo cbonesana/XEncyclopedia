@@ -12,9 +12,9 @@ import java.io.FileOutputStream;
 public class AngleAxis {
 
     public double angle = 0;
-    public double x = 0;
-    public double y = 0;
-    public double z = 0;
+    public double x     = 0;
+    public double y     = 0;
+    public double z     = 0;
 
     public void load(DataInputStream dis) {
         // TODO

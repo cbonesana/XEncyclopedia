@@ -8,7 +8,7 @@ public class TagValue {
 
     public boolean b;
     public int i;
-    public String psz;
+    public String psz = "";
     public float f;
-    public Float4 f4;
+    public Float4 f4 = new Float4();
 }

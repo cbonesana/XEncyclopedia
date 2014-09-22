@@ -11,11 +11,11 @@ import java.io.FileOutputStream;
  */
 public class TCBInfo {
 
-    public double tension = 0;
+    public double tension    = 0;
     public double continuity = 0;
-    public double bias = 0;
-    public double easeFrom = 0;
-    public double easeTo = 0;
+    public double bias       = 0;
+    public double easeFrom   = 0;
+    public double easeTo     = 0;
 
     public void load(DataInputStream dis) {
         // TODO

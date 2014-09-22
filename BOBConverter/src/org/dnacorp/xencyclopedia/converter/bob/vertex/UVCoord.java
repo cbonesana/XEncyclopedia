@@ -8,6 +8,10 @@ import org.dnacorp.xencyclopedia.converter.bob.geometry.Point2DDouble;
  */
 public class UVCoord extends Point2DDouble {
 
+    public UVCoord() {
+        super();
+    }
+
     public UVCoord(double x, double y) {
         super(x, y);
     }

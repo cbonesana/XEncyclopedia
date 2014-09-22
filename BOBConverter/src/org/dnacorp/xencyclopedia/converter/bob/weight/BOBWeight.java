@@ -1,6 +1,7 @@
 package org.dnacorp.xencyclopedia.converter.bob.weight;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,7 +10,7 @@ import java.util.List;
  */
 public class BOBWeight {
 
-    public List<Value> values;
+    public List<Value> values = new ArrayList<>();
 
     public BOBWeight() {}
 
